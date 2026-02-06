@@ -5,214 +5,311 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#2563eb">
     <link rel="manifest" href="manifest.json">
-    <title>VMS Pro - Master V.5</title>
+    <title>VMS Pro Master V.9</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg: #f8fafc; --card: #ffffff; --card-rgb: 255, 255, 255;
-            --text: #0f172a; --muted: #64748b; --border: #e2e8f0;
+            --bg: #f3f4f6; --card: #ffffff; --card-rgb: 255, 255, 255;
+            --text: #111827; --muted: #6b7280; --border: #e5e7eb;
             --primary: #2563eb; --success: #10b981; --danger: #ef4444;
-            --info: #0ea5e9; --overlay: rgba(15, 23, 42, 0.4);
+            --info: #0ea5e9; --overlay: rgba(17, 24, 39, 0.5);
+            --btn-gray: #e5e7eb; --btn-gray-text: #374151;
         }
         [data-theme="dark"] {
             --bg: #020617; --card: #1e293b; --card-rgb: 30, 41, 59;
-            --text: #f1f5f9; --muted: #94a3b8; --border: #334155;
+            --text: #f8fafc; --muted: #94a3b8; --border: #334155;
             --primary: #3b82f6; --success: #10b981; --danger: #f87171;
             --info: #38bdf8; --overlay: rgba(0, 0, 0, 0.7);
+            --btn-gray: #334155; --btn-gray-text: #f1f5f9;
         }
 
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes bounceIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes bobbing { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-8px); } }
-        @keyframes pulseStock { 0% { transform: scale(1); } 50% { transform: scale(1.15); color: var(--danger); } 100% { transform: scale(1); } }
+        @keyframes bobbing { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-6px); } }
 
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: 0.3s; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: background 0.3s; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* --- SIDEBAR GEMINI STYLE --- */
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card); z-index: 3000; transition: 0.3s ease; border-right: 1px solid var(--border); padding: 20px; box-sizing: border-box; }
-        .sidebar.active { left: 0; box-shadow: 10px 0 30px rgba(0,0,0,0.1); }
-        .nav-item { padding: 12px 15px; border-radius: 12px; margin-bottom: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+        /* --- SIDEBAR MASTER --- */
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card); z-index: 9500; transition: 0.3s ease-in-out; border-right: 1px solid var(--border); padding: 30px 20px; box-sizing: border-box; }
+        .sidebar.active { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.2); }
+        .sidebar-logo { width: 60px; height: 60px; border-radius: 15px; margin-bottom: 10px; object-fit: cover; display: block; margin-left: auto; margin-right: auto; }
+        .nav-item { padding: 14px 18px; border-radius: 14px; margin-bottom: 8px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 12px; transition: 0.2s; font-size: 14px; }
         .nav-item:hover { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
 
-        .sticky-header { position: sticky; top: 0; z-index: 1000; background: rgba(var(--card-rgb), 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 10px 15px; }
-        .header-content { max-width: 1200px; margin: auto; display: flex; align-items: center; gap: 10px; }
-        .btn-top { padding: 10px 12px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; color: white; font-size: 11px; flex: 1; text-align: center; }
+        /* --- STICKY NAVBAR MASTER --- */
+        .sticky-header { position: sticky; top: 0; z-index: 1000; background: rgba(var(--card-rgb), 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; }
+        .header-content { max-width: 1400px; margin: auto; display: flex; align-items: center; gap: 10px; }
+        .nav-logo-small { width: 30px; height: 30px; border-radius: 8px; object-fit: cover; }
+        .btn-top { padding: 12px 6px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: white; font-size: 10px; flex: 1; text-transform: uppercase; }
 
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 12px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .card { background: var(--card); padding: 18px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); animation: fadeUp 0.5s ease-out; }
-        .card h3 { font-size: 11px; margin: 0 0 15px 0; color: var(--muted); text-transform: uppercase; font-weight: 800; }
+        /* --- LAYOUT MASTER --- */
+        .container { max-width: 1400px; margin: 25px auto; padding: 0 15px; box-sizing: border-box; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-bottom: 25px; }
+        .card { background: var(--card); padding: 22px; border-radius: 28px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03); animation: fadeUp 0.5s ease-out; }
+        .card h3 { font-size: 11px; margin: 0 0 18px 0; color: var(--muted); text-transform: uppercase; font-weight: 800; }
         
-        input, select { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; box-sizing: border-box; font-size: 13px; outline: none; transition: 0.2s; }
-        button.action { width: 100%; padding: 14px; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; color: white; transition: 0.2s; display: block; }
+        input, select, textarea { width: 100%; background: var(--bg); border: 1.5px solid var(--border); color: var(--text); padding: 15px; border-radius: 14px; box-sizing: border-box; font-size: 16px; outline: none; transition: 0.2s; }
+        textarea { resize: none; font-family: monospace; }
+        
+        button.action { width: 100%; padding: 16px; border: none; border-radius: 18px; font-weight: 800; cursor: pointer; color: white; transition: 0.2s; font-size: 14px; display: block; }
         .btn-p { background: var(--primary); } .btn-i { background: var(--info); } .btn-s { background: var(--success); }
 
-        /* CRITICAL ROW STYLING */
-        .row-critical { background: rgba(239, 68, 68, 0.08) !important; border-left: 4px solid var(--danger); }
-        .pointer-icon { display: inline-block; animation: bobbing 0.8s ease-in-out infinite; font-size: 14px; margin-left: 5px; }
-        .pulse-text { display: inline-block; animation: pulseStock 1.5s ease-in-out infinite; font-weight: 800; }
+        /* --- TABLE Master (LEFT ALIGNED) --- */
+        .table-box { background: var(--card); border-radius: 28px; border: 1px solid var(--border); overflow-x: auto; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.03); }
+        table { width: 100%; border-collapse: collapse; min-width: 650px; }
+        th { background: rgba(var(--card-rgb), 0.5); padding: 20px 15px; font-size: 11px; color: var(--muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 18px 15px; border-bottom: 1px solid var(--border); font-size: 14px; text-align: center; font-weight: 700; }
+        .td-left { text-align: left !important; padding-left: 25px; } 
 
-        .table-box { background: var(--card); border-radius: 20px; border: 1px solid var(--border); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th { background: rgba(var(--card-rgb), 0.5); padding: 15px; font-size: 10px; color: var(--muted); text-transform: uppercase; }
-        td { padding: 14px; border-bottom: 1px solid var(--border); font-size: 13px; text-align: center; font-weight: 600; }
-        .btn-mute { background: var(--border); border: none; border-radius: 6px; padding: 4px 8px; font-size: 9px; cursor: pointer; color: var(--muted); font-weight: 700; }
+        .row-critical { background: rgba(239, 68, 68, 0.08) !important; border-left: 6px solid var(--danger); }
+        .pointer-icon { display: inline-block; animation: bobbing 0.8s infinite; margin-left: 8px; font-size: 16px; vertical-align: middle; }
 
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--overlay); display:none; justify-content:center; align-items:center; z-index:4000; backdrop-filter: blur(8px); padding: 20px; box-sizing: border-box; }
-        .modal { background: var(--card); padding: 25px; border-radius: 28px; width: 100%; max-width: 400px; border: 1px solid var(--border); animation: bounceIn 0.3s; }
-        .modal-footer { display: flex; gap: 10px; margin-top: 25px; }
-        .btn-m { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; font-size: 14px; text-align: center; }
+        /* --- MODALS GLASS MASTER --- */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--overlay); display:none; justify-content:center; align-items:flex-start; z-index:8500; backdrop-filter: blur(12px); padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .modal { background: var(--card); padding: 35px; border-radius: 35px; width: 100%; max-width: 500px; border: 1px solid var(--border); animation: bounceIn 0.3s; margin-top: 50px; margin-bottom: 50px; }
+        .modal h2 { margin: 0 0 25px 0; font-size: 22px; text-align: center; font-weight: 800; color: var(--text); }
+        .modal-footer { display: flex; gap: 10px; margin-top: 30px; }
+        
+        .btn-m { flex: 1; padding: 18px; border-radius: 16px; border: none; font-weight: 800; cursor: pointer; font-size: 14px; text-align: center; }
+        .btn-secondary { background: var(--btn-gray); color: var(--btn-gray-text); }
+        
+        .hist-item { background: var(--bg); padding: 20px; border-radius: 20px; margin-bottom: 12px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .btn-proof { background: var(--info); color: white; border: none; padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="sidebar" id="sidebar">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
-        <h2 style="margin:0; font-size:18px;">VMS Pro Menu</h2>
-        <button onclick="toggleSidebar()" style="background:none; border:none; font-size:22px; color:var(--text);">✕</button>
+    <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:35px;">
+        <img src="logo.png" class="sidebar-logo" alt="VMS Logo">
+        <h2 style="margin:10px 0 0 0; font-size:22px; font-weight:800; color:var(--primary);">VMS MASTER</h2>
+        <button onclick="toggleSidebar()" style="position:absolute; right:20px; top:30px; background:none; border:none; font-size:26px; color:var(--text); cursor:pointer;">✕</button>
     </div>
     <div class="nav-item" onclick="toggleSidebar()">🏠 Dashboard</div>
-    <div class="nav-item" onclick="openHistory(); toggleSidebar()">📜 Riwayat Laporan</div>
+    <div class="nav-item" onclick="openHistory(); toggleSidebar()">📜 Riwayat & Bukti</div>
     <div class="nav-item" onclick="openModal('mAdd'); toggleSidebar()">➕ Tambah Voucher</div>
     <div class="nav-item" onclick="openModal('mReset'); toggleSidebar()">⚙️ Reset / Hapus Data</div>
     <div class="nav-item" onclick="requestNotif(); toggleSidebar()">🔔 Aktifkan Notif HP</div>
-    <div class="nav-item" onclick="toggleTheme(); toggleSidebar()">🌓 Ganti Tema</div>
+    <div class="nav-item" onclick="toggleTheme(); toggleSidebar()">🌓 Ganti Tema Warna</div>
 </div>
 
 <div class="sticky-header">
     <div class="header-content">
-        <button onclick="toggleSidebar()" style="background:none; border:none; font-size:24px; color:var(--text); cursor:pointer;">☰</button>
+        <button onclick="toggleSidebar()" style="background:none; border:none; font-size:28px; color:var(--text); cursor:pointer; padding:0 8px;">☰</button>
+        <img src="logo.png" class="nav-logo-small" alt="VMS Logo">
         <div class="main-actions" style="display:flex; gap:8px; flex:1;">
-            <button class="btn-top" style="background:#25D366" onclick="openLaporan()">🚀 LAPORAN WA</button>
-            <button class="btn-top" style="background:var(--danger)" onclick="saveDailySnapshot()">💾 TUTUP BUKU</button>
+            <button class="btn-top" style="background:var(--primary)" onclick="startSequentialUpdate()">🚀 UPDATE PENJUALAN</button>
+            <button class="btn-top" style="background:#25D366" onclick="openLaporan()">📊 COPY LAPORAN</button>
+            <button class="btn-top" style="background:var(--danger)" onclick="saveDailySnapshot()">💾 SIMPAN & RESET</button>
         </div>
-        <button onclick="toggleTheme()" id="themeIcon" style="background:none; border:none; font-size:20px; cursor:pointer;">🌞</button>
+        <button onclick="toggleTheme()" id="themeIcon" style="background:none; border:none; font-size:24px; cursor:pointer;">🌞</button>
     </div>
 </div>
 
 <div class="container">
     <div class="grid">
         <div class="card">
-            <h3>📊 Update Penjualan</h3>
-            <div class="input-row"><div><label>ID</label><input type="number" id="idC"></div><div><label>SISA</label><input type="number" id="sisC"></div></div>
-            <button class="action btn-p" onclick="doCek()">Update Stok</button>
-        </div>
-        <div class="card">
-            <h3>🚚 Pindah Barang</h3>
-            <div class="input-row"><div><label>ID</label><input type="number" id="idP"></div><div><label>QTY</label><input type="number" id="qtyP"></div></div>
-            <button class="action btn-i" onclick="doMove()">Pindahkan</button>
+            <h3>🚚 Pindahkan Stok</h3>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <div style="flex:0.5"><label>ID</label><input type="number" id="idP" inputmode="numeric"></div>
+                <div style="flex:1"><label>QTY</label><input type="number" id="qtyP" inputmode="numeric"></div>
+            </div>
+            <button class="action btn-i" onclick="doMove()">Pindahkan ke Etalase</button>
         </div>
         <div class="card">
             <h3>📦 Restock Kamar</h3>
-            <div class="input-row"><div><label>ID</label><input type="number" id="idR"></div><div><label>BELI</label><input type="number" id="qtyR"></div></div>
-            <button class="action btn-s" onclick="doRestock()">Simpan Stok</button>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <div style="flex:0.5"><label>ID</label><input type="number" id="idR" inputmode="numeric"></div>
+                <div style="flex:1"><label>BELI BARU</label><input type="number" id="qtyR" inputmode="numeric"></div>
+            </div>
+            <button class="action btn-s" onclick="doRestock()">Simpan ke Kamar</button>
         </div>
     </div>
 
     <div class="table-box">
         <table>
-            <thead><tr><th>ID</th><th>Voucher</th><th>Harga</th><th>Kmr</th><th>Etl</th><th>Laku</th><th>Aksi</th></tr></thead>
+            <thead><tr><th>ID</th><th class="td-left">Voucher (Rincian Produk)</th><th>Kmr</th><th>Etl</th><th>Laku</th><th>Aksi</th></tr></thead>
             <tbody id="vTableBody"></tbody>
         </table>
     </div>
 </div>
 
-<div class="modal-overlay" id="mReset">
-    <div class="modal">
-        <h2>Reset / Hapus Data</h2>
-        <label>Mode</label>
-        <select id="rScope" onchange="document.getElementById('rIDBox').style.display=this.value=='one'?'block':'none'" style="margin-bottom:12px">
-            <option value="all">Semua Baris</option>
-            <option value="one">Satu Baris (ID)</option>
-        </select>
-        <div id="rIDBox" style="display:none; margin-bottom:12px;">
-            <label>ID Voucher</label>
-            <input type="number" id="rID" placeholder="Masukkan ID">
+<div class="modal-overlay" id="mSequential"><div class="modal">
+    <div style="text-align:center">
+        <span id="seqProgress" style="font-size:10px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1px;">Voucher 1 dari 10</span><br>
+        <div style="margin:15px 0">
+            <label style="font-size:10px; font-weight:800; color:var(--muted)">LOMPAT KE ID:</label>
+            <input type="number" id="seqIdInput" inputmode="numeric" style="text-align:center; width:90px; margin:auto; display:block" onchange="jumpToId(this.value)">
         </div>
-        <label>Tindakan</label>
-        <select id="rCol">
-            <option value="terjual">1. Reset Laku Saja</option>
-            <option value="stok_etalase">2. Reset Etalase Saja</option>
-            <option value="stok_kamar">3. Reset Kamar Saja</option>
-            <option value="LAKU_ETALASE">4. Reset Laku & Etalase</option> <option value="DELETE">5. Hapus Voucher Permanen</option>
-        </select>
-        <div class="modal-footer">
-            <button class="btn-m" style="background:var(--muted); color:white" onclick="closeModal('mReset')">Batal</button>
-            <button class="btn-m" style="background:var(--danger); color:white" onclick="confirmReset()">Eksekusi</button>
-        </div>
+        <h2 id="seqName" style="margin:10px 0 30px 0; font-size:28px;">V AXIS 14</h2>
     </div>
-</div>
+    <label style="font-size:12px; font-weight:800; color:var(--muted); margin-bottom:12px; display:block;">SISA DI ETALASE SEKARANG:</label>
+    <input type="number" id="seqSisaInput" inputmode="numeric" placeholder="Contoh: 5">
+    
+    <div class="modal-footer">
+        <button class="btn-m btn-secondary" onclick="prevSeq()">BACK</button>
+        <button class="btn-m" style="background:var(--success); color:white" onclick="saveCurrentSeq()">SIMPAN</button>
+        <button class="btn-m btn-secondary" onclick="nextSeq()">NEXT</button>
+    </div>
+    <button onclick="closeModal('mSequential')" style="width:100%; margin-top:30px; background:none; border:none; color:var(--muted); font-size:12px; font-weight:700; cursor:pointer;">Berhenti / Keluar</button>
+</div></div>
 
-<div class="modal-overlay" id="mSnapshot"><div class="modal"><h2>Tutup Buku</h2><div id="snapSummary" style="background:var(--bg); padding:15px; border-radius:15px; margin-bottom:15px; font-size:13px;"></div><label>Uang Fisik:</label><input type="number" id="snapFisik" placeholder="Rp0" style="margin-bottom:15px"><div class="modal-footer"><button class="btn-m" style="background:var(--muted); color:white" onclick="closeModal('mSnapshot')">Batal</button><button class="btn-m" style="background:var(--success); color:white" onclick="confirmSnapshot()">Simpan & Reset</button></div></div></div>
-<div class="modal-overlay" id="mAdd"><div class="modal"><h2>Voucher Baru</h2><div style="margin-bottom:12px"><label>Lengkap:</label><input type="text" id="aL" placeholder="V AXIS 3.5GB/5HARI"></div><div style="margin-bottom:12px"><label>WA:</label><input type="text" id="aW" placeholder="axis 14"></div><div style="margin-bottom:12px"><label>Harga:</label><input type="number" id="aH" placeholder="14000"></div><div class="input-row"><div><label>Kmr:</label><input type="number" id="aK" value="0"></div><div><label>Etl:</label><input type="number" id="aE" value="0"></div></div><div class="modal-footer"><button class="btn-m" style="background:var(--muted); color:white" onclick="closeModal('mAdd')">Batal</button><button class="btn-m" style="background:var(--primary); color:white" onclick="saveNew()">Simpan</button></div></div></div>
-<div class="modal-overlay" id="mHistory"><div class="modal" style="max-width:550px"><h2>Riwayat</h2><div id="histContent" style="max-height:300px; overflow-y:auto; font-size:11px;"></div><button class="action btn-p" style="margin-top:20px" onclick="closeModal('mHistory')">Tutup</button></div></div>
-<div class="modal-overlay" id="mReport"><div class="modal"><h2>Laporan WA</h2><p id="tSis" style="font-weight:800; color:var(--primary); text-align:center;">Sistem: Rp0</p><label>Uang Fisik:</label><input type="number" id="iF"><div class="modal-footer"><button class="btn-m" style="background:var(--muted); color:white" onclick="closeModal('mReport')">Batal</button><button class="btn-m" style="background:var(--primary); color:white" onclick="genFinal()">Generate</button></div></div></div>
-<div class="modal-overlay" id="mView"><div class="modal"><h2>Salin Laporan</h2><textarea id="repRes" readonly style="width:100%; height:150px; background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:12px; font-size:11px; outline:none; font-family:monospace;"></textarea><div class="modal-footer" style="margin-top:15px;"><button class="btn-m" style="background:var(--success); color:white" onclick="copyClose()">Copy & Tutup</button></div></div></div>
+<div class="modal-overlay" id="mProof"><div class="modal" style="max-width:550px">
+    <h2 id="proofTitle" style="margin-bottom:25px;">Bukti Penjualan</h2>
+    <div id="proofBody" style="max-height:380px; overflow-y:auto; background:var(--bg); border-radius:24px; border:1px solid var(--border); padding:10px;"></div>
+    <div class="modal-footer">
+        <button class="btn-m btn-p" style="background:var(--primary); color:white" onclick="closeModal('mProof')">Tutup Bukti</button>
+    </div>
+</div></div>
+
+<div class="modal-overlay" id="mHistory"><div class="modal" style="max-width:650px">
+    <h2>Riwayat Tutup Buku</h2>
+    <div id="histContent" style="max-height:400px; overflow-y:auto; margin-bottom:20px;"></div>
+    <div class="modal-footer">
+        <button class="btn-m btn-p" style="background:var(--primary); color:white" onclick="closeModal('mHistory')">Tutup Riwayat</button>
+    </div>
+</div></div>
+
+<div class="modal-overlay" id="mReport"><div class="modal">
+    <h2>Laporan WA</h2>
+    <p id="tSis" style="font-weight:800; color:var(--primary); text-align:center; font-size:22px; margin-bottom:20px;"></p>
+    <label>Uang Yang Ada (Fisik):</label>
+    <input type="number" id="iF" inputmode="numeric" placeholder="Contoh: 170000">
+    <div class="modal-footer">
+        <button class="btn-m btn-secondary" onclick="closeModal('mReport')">Batal</button>
+        <button class="btn-m" style="background:var(--primary); color:white" onclick="genFinal()">Generate</button>
+    </div>
+</div></div>
+
+<div class="modal-overlay" id="mView"><div class="modal">
+    <h2>Salin Laporan</h2>
+    <textarea id="repRes" readonly style="width:100%; height:300px; background:var(--bg); border:1.5px solid var(--border); border-radius:20px; padding:18px; font-size:13px; color:var(--text); outline:none; line-height:1.6;"></textarea>
+    <div class="modal-footer">
+        <button class="btn-m" style="background:var(--success); color:white" onclick="copyClose()">Copy & Tutup</button>
+    </div>
+</div></div>
+
+<div class="modal-overlay" id="mSnapshot"><div class="modal"><h2>Selesaikan Hari Ini</h2><div id="snapSummary" style="background:var(--bg); padding:25px; border-radius:24px; margin-bottom:25px; font-size:15px; font-weight:700;"></div><label>Jumlah Uang Fisik:</label><input type="number" id="snapFisik" inputmode="numeric" placeholder="Rp0"><div class="modal-footer"><button class="btn-m btn-secondary" onclick="closeModal('mSnapshot')">Batal</button><button class="btn-m" style="background:var(--success); color:white" onclick="confirmSnapshot()">Simpan & Reset</button></div></div></div>
+<div class="modal-overlay" id="mAdd"><div class="modal"><h2>Voucher Baru</h2><div style="margin-bottom:15px"><label>Lengkap:</label><input type="text" id="aL"></div><div style="margin-bottom:15px"><label>Nama WA:</label><input type="text" id="aW"></div><div style="margin-bottom:15px"><label>Harga Jual:</label><input type="number" id="aH" inputmode="numeric"></div><div class="modal-footer"><button class="btn-m btn-secondary" onclick="closeModal('mAdd')">Batal</button><button class="btn-m" style="background:var(--primary); color:white" onclick="saveNew()">Simpan</button></div></div></div>
+<div class="modal-overlay" id="mReset"><div class="modal"><h2>Reset Data</h2><label>ID:</label><input type="number" id="rID" inputmode="numeric" style="margin-bottom:15px"><label>Aksi:</label><select id="rCol"><option value="terjual">Reset Laku</option><option value="stok_etalase">Reset Etalase</option><option value="stok_kamar">Reset Stok Kamar</option><option value="LAKU_ETALASE">Reset Laku & Etalase</option><option value="DELETE">Hapus Voucher</option></select><div class="modal-footer"><button class="btn-m btn-secondary" onclick="closeModal('mReset')">Batal</button><button class="btn-m" style="background:var(--danger); color:white" onclick="confirmReset()">Eksekusi</button></div></div></div>
 
 <script>
     const SB_URL = "https://cphgjbsdzslyyaduherc.supabase.co";
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwaGdqYnNkenNseXlhZHVoZXJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMDg4MDMsImV4cCI6MjA4NTg4NDgwM30.bzoog6sHewP_VpqCg7oXS33HyeB_OYEExB5cbsAnQX8";
     const client = supabase.createClient(SB_URL, SB_KEY);
 
-    let gTotal = 0; let gItem = 0;
+    let gTotal = 0; let gItem = 0; let seqData = []; let seqIdx = 0;
+    let gBreakdown = ""; 
 
     function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
     function openModal(id) { document.getElementById(id).style.display='flex'; }
     function closeModal(id) { document.getElementById(id).style.display='none'; }
 
+    // --- SEQUENTIAL Master Mobile ---
+    async function startSequentialUpdate() {
+        const { data } = await client.from('vouchers').select('*').order('id', { ascending: true });
+        if (data && data.length > 0) { seqData = data; seqIdx = 0; renderSeq(); openModal('mSequential'); }
+    }
+    function renderSeq() {
+        const v = seqData[seqIdx];
+        document.getElementById('seqProgress').innerText = `VOUCHER ${seqIdx + 1} DARI ${seqData.length}`;
+        document.getElementById('seqIdInput').value = v.id;
+        document.getElementById('seqName').innerText = v.nama_wa;
+        document.getElementById('seqSisaInput').value = v.stok_etalase;
+        document.getElementById('seqSisaInput').focus();
+    }
+    async function saveCurrentSeq() {
+        const v = seqData[seqIdx]; const sisa = parseInt(document.getElementById('seqSisaInput').value);
+        if(!isNaN(sisa) && v.stok_etalase >= sisa) {
+            await client.from('vouchers').update({ stok_etalase: sisa, terjual: v.terjual + (v.stok_etalase - sisa), is_ignored: false }).eq('id', v.id);
+            alert(`ID #${v.id} Disimpan!`);
+        }
+    }
+    function nextSeq() { if(seqIdx < seqData.length - 1) { seqIdx++; renderSeq(); } }
+    function prevSeq() { if(seqIdx > 0) { seqIdx--; renderSeq(); } }
+    function jumpToId(tid) { const fIdx = seqData.findIndex(v => v.id == tid); if(fIdx !== -1) { seqIdx = fIdx; renderSeq(); } }
+
     async function refresh() {
         const { data } = await client.from('vouchers').select('*').order('id', { ascending: true });
         const b = document.getElementById('vTableBody'); b.innerHTML = '';
         gTotal = 0; gItem = 0;
-        if (data) {
-            data.forEach((v, idx) => {
-                const isCrit = v.stok_etalase < 2 && !v.is_ignored;
-                const row = document.createElement('tr');
-                if (isCrit) row.classList.add('row-critical');
-                const stockUI = isCrit ? `<span class="pulse-text">${v.stok_etalase}</span> <span class="pointer-icon">👈</span>` : v.stok_etalase;
-                const muteBtn = (v.stok_etalase < 2) ? `<button class="btn-mute" onclick="toggleMute(${v.id}, ${!v.is_ignored})">${v.is_ignored ? 'ON' : 'OFF'}</button>` : '-';
-                row.innerHTML = `<td>#${v.id}</td><td style="text-align:left">${v.nama_lengkap}</td><td>${v.harga_jual/1000}k</td><td>${v.stok_kamar}</td><td>${stockUI}</td><td><span class="badge">${v.terjual}</span></td><td>${muteBtn}</td>`;
-                b.appendChild(row);
-                gTotal += (v.terjual * v.harga_jual); gItem += v.terjual;
-            });
-            checkStockNotif(data);
-        }
+        if (data) data.forEach((v) => {
+            const isCrit = v.stok_etalase < 2 && !v.is_ignored;
+            const row = document.createElement('tr');
+            if (isCrit) row.classList.add('row-critical');
+            const stockUI = isCrit ? `${v.stok_etalase} <span class="pointer-icon">👈</span>` : v.stok_etalase;
+            row.innerHTML = `<td style="font-size:11px; color:var(--muted);">#${v.id}</td><td class="td-left">${v.nama_lengkap}</td><td>${v.stok_kamar}</td><td>${stockUI}</td><td><span style="color:var(--danger);">${v.terjual}</span></td><td><button style="border:none; background:var(--border); border-radius:8px; padding:6px 10px; font-size:10px; font-weight:800; color:var(--muted); cursor:pointer;" onclick="toggleMute(${v.id}, ${!v.is_ignored})">${v.is_ignored ? 'ON' : 'OFF'}</button></td>`;
+            b.appendChild(row);
+            gTotal += (v.terjual * v.harga_jual); gItem += v.terjual;
+        });
+        checkStockNotif(data);
     }
 
-    // --- FITUR RESET KE-5 ---
-    async function confirmReset() {
-        const sc = document.getElementById('rScope').value;
-        const ac = document.getElementById('rCol').value;
-        const id = document.getElementById('rID').value;
+    // --- Master FORMAT LAPORAN WA ---
+    async function openLaporan() {
+        const { data } = await client.from('vouchers').select('*').order('id', { ascending: true });
+        gBreakdown = "";
+        data.forEach(v => {
+            // FORMAT: axis 14 = 4 (Tanpa titik)
+            gBreakdown += ` ${v.nama_wa} = ${v.stok_etalase}\n`;
+        });
+        document.getElementById('tSis').innerText = `Sistem: Rp${gTotal.toLocaleString()}`;
+        openModal('mReport');
+    }
 
-        if (ac === "DELETE") {
-            if(confirm("Hapus selamanya?")) await client.from('vouchers').delete().eq('id', id);
-        } else if (ac === "LAKU_ETALASE") { // LOGIKA BARU
-            const updateObj = { terjual: 0, stok_etalase: 0 };
-            if(sc === 'all') await client.from('vouchers').update(updateObj).neq('id', 0);
-            else await client.from('vouchers').update(updateObj).eq('id', id);
-        } else {
-            if(sc === 'all') await client.from('vouchers').update({ [ac]: 0 }).neq('id', 0);
-            else await client.from('vouchers').update({ [ac]: 0 }).eq('id', id);
+    function genFinal() {
+        const f = parseInt(document.getElementById('iF').value) || 0;
+        const now = new Date();
+        const months = ['januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember'];
+        // FORMAT: *7/februari/26 2:48:20*
+        const timestamp = `*${now.getDate()}/${months[now.getMonth()]}/${String(now.getFullYear()).slice(-2)} ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}*`;
+        
+        const final = `${timestamp}\n\n${gBreakdown}\n------------------\n💰 Target: Rp${gTotal.toLocaleString()}\n💵 Uang Yang Ada: Rp${f.toLocaleString()}\n🚨 +-: Rp${(f-gTotal).toLocaleString()}`;
+        
+        document.getElementById('repRes').value = final;
+        closeModal('mReport'); openModal('mView');
+    }
+
+    // --- TUTUP BUKU & HISTORY Master ---
+    async function saveDailySnapshot() { 
+        document.getElementById('snapSummary').innerHTML = `Laku: ${gItem} pcs<br>Total: Rp${gTotal.toLocaleString()}`; 
+        openModal('mSnapshot'); 
+    }
+    async function confirmSnapshot() {
+        const { data: currentSales } = await client.from('vouchers').select('nama_wa, terjual, harga_jual').gt('terjual', 0);
+        const f = parseInt(document.getElementById('snapFisik').value) || 0;
+        await client.from('laporan_harian').insert([{ total_terjual_item: gItem, total_pendapatan_sistem: gTotal, uang_fisik_nyata: f, selisih: f - gTotal, detail_terjual: currentSales }]);
+        await client.from('vouchers').update({ terjual: 0 }).neq('id', 0);
+        closeModal('mSnapshot'); refresh(); alert("Berhasil Tutup Buku!");
+    }
+    async function openHistory() {
+        const { data } = await client.from('laporan_harian').select('*').order('tanggal', { ascending: false });
+        let h = '';
+        data.forEach(x => { h += `<div class="hist-item"><div><small style="font-weight:800; color:var(--muted)">${x.tanggal}</small><br><b style="font-size:18px">${x.total_pendapatan_sistem/1000}k</b></div><button class="btn-proof" onclick="showProof('${x.tanggal}')">🔍 BUKTI</button></div>`; });
+        document.getElementById('histContent').innerHTML = h || '<p>Kosong.</p>';
+        openModal('mHistory');
+    }
+    async function showProof(tgl) {
+        const { data } = await client.from('laporan_harian').select('detail_terjual').eq('tanggal', tgl).single();
+        if(data && data.detail_terjual) {
+            let table = '<table style="width:100%; border-collapse:collapse;"><tr><th class="td-left">Item</th><th>Laku</th><th>Sub</th></tr>';
+            data.detail_terjual.forEach(v => { table += `<tr><td class="td-left">${v.nama_wa}</td><td>${v.terjual}</td><td>${(v.terjual*v.harga_jual)/1000}k</td></tr>`; });
+            document.getElementById('proofTitle').innerText = "Rincian " + tgl;
+            document.getElementById('proofBody').innerHTML = table + '</table>';
+            openModal('mProof');
         }
-        closeModal('mReset'); refresh();
     }
 
     // --- CORE TOOLS ---
     async function toggleMute(id, s) { await client.from('vouchers').update({ is_ignored: s }).eq( 'id', id); refresh(); }
-    async function doCek() { const id = document.getElementById('idC').value; const s = parseInt(document.getElementById('sisC').value); const { data: v } = await client.from('vouchers').select('stok_etalase, terjual').eq('id', id).single(); if(v && v.stok_etalase >= s) { await client.from('vouchers').update({ stok_etalase: s, terjual: v.terjual + (v.stok_etalase - s), is_ignored: false }).eq('id', id); refresh(); } }
     async function doMove() { const id = document.getElementById('idP').value; const q = parseInt(document.getElementById('qtyP').value); const { data: v } = await client.from('vouchers').select('stok_kamar, stok_etalase').eq('id', id).single(); if(v && v.stok_kamar >= q) { await client.from('vouchers').update({ stok_kamar: v.stok_kamar - q, stok_etalase: v.stok_etalase + q, is_ignored: false }).eq('id', id); refresh(); } }
     async function doRestock() { const id = document.getElementById('idR').value; const q = parseInt(document.getElementById('qtyR').value); const { data: v } = await client.from('vouchers').select('stok_kamar').eq('id', id).single(); if(v) { await client.from('vouchers').update({ stok_kamar: v.stok_kamar + q, is_ignored: false }).eq('id', id); refresh(); } }
-    async function saveDailySnapshot() { document.getElementById('snapSummary').innerHTML = `Laku: ${gItem} pcs<br>Total: Rp${gTotal.toLocaleString()}`; openModal('mSnapshot'); }
-    async function confirmSnapshot() { const f = parseInt(document.getElementById('snapFisik').value) || 0; await client.from('laporan_harian').insert([{ total_terjual_item: gItem, total_pendapatan_sistem: gTotal, uang_fisik_nyata: f, selisih: f - gTotal }]); await client.from('vouchers').update({ terjual: 0 }).neq('id', 0); closeModal('mSnapshot'); refresh(); alert("Beres!"); }
-    async function openHistory() { const { data } = await client.from('laporan_harian').select('*').order('tanggal', { ascending: false }); let h = '<table style="width:100%; text-align:center;"><tr><th>Tgl</th><th>Sistem</th><th>+/-</th></tr>'; data.forEach(x => h += `<tr><td>${x.tanggal}</td><td>${x.total_pendapatan_sistem/1000}k</td><td style="color:${x.selisih < 0 ? 'var(--danger)' : 'var(--success)'}">${x.selisih}</td></tr>`); document.getElementById('histContent').innerHTML = h + '</table>'; openModal('mHistory'); }
-    async function openLaporan() { const { data } = await client.from('vouchers').select('*').order('id', { ascending: true }); let r = "*LAPORAN STOK HARIAN*\n\n"; data.forEach(v => r += `• ${v.nama_wa} = ${v.stok_etalase}\n`); document.getElementById('tSis').innerText = `Sistem: Rp${gTotal.toLocaleString()}`; document.getElementById('repRes').value = r; openModal('mReport'); }
-    function genFinal() { const f = parseInt(document.getElementById('iF').value) || 0; document.getElementById('repRes').value += `\n------------------\n💰 Target: Rp${gTotal.toLocaleString()}\n💵 Fisik: Rp${f.toLocaleString()}\n🚨 Mama: Rp${(gTotal - f).toLocaleString()}`; closeModal('mReport'); openModal('mView'); }
-    function copyClose() { navigator.clipboard.writeText(document.getElementById('repRes').value); closeModal('mView'); }
-    function saveNew() { const p = { nama_lengkap: document.getElementById('aL').value, nama_wa: document.getElementById('aW').value, harga_jual: parseInt(document.getElementById('aH').value), stok_kamar: parseInt(document.getElementById('aK').value), stok_etalase: parseInt(document.getElementById('aE').value) }; client.from('vouchers').insert([p]).then(() => { closeModal('mAdd'); refresh(); }); }
+    async function confirmReset() { const col = document.getElementById('rCol').value; const id = document.getElementById('rID').value; if(col === "DELETE") { if(confirm("Hapus selamanya?")) await client.from('vouchers').delete().eq('id', id); } else if(col === "LAKU_ETALASE") { await client.from('vouchers').update({ terjual: 0, stok_etalase: 0 }).eq('id', id); } else { await client.from('vouchers').update({ [col]: 0 }).eq('id', id); } closeModal('mReset'); refresh(); }
+    function copyClose() { const t = document.getElementById('repRes'); t.select(); navigator.clipboard.writeText(t.value); closeModal('mView'); alert("Laporan Dicopy!"); }
+    function saveNew() { const p = { nama_lengkap: document.getElementById('aL').value, nama_wa: document.getElementById('aW').value, harga_jual: parseInt(document.getElementById('aH').value), stok_kamar: 0, stok_etalase: 0 }; client.from('vouchers').insert([p]).then(() => { closeModal('mAdd'); refresh(); }); }
     function requestNotif() { Notification.requestPermission(); }
     function checkStockNotif(d) { const low = d.filter(v => v.stok_etalase < 3 && !v.is_ignored); if (low.length >= 3 && Notification.permission === 'granted') new Notification("🚨 Stok Tipis!", { body: `Ada ${low.length} voucher sisa dikit.` }); }
     function toggleTheme() { const h = document.documentElement; const nxt = h.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; h.setAttribute('data-theme', nxt); document.getElementById('themeIcon').innerText = nxt === 'light' ? '🌞' : '🌜'; localStorage.setItem('theme', nxt); }

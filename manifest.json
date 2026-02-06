@@ -1,13 +1,13 @@
 {
   "name": "Voucher Management System Pro",
-  "short_name": "VMS Pro",
+  "short_name": "Laporan Voucher",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#020617",
   "theme_color": "#2563eb",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/5607/5607610.png",
+      "src": "logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
