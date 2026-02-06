@@ -37,39 +37,38 @@
 
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: background 0.3s; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* SIDEBAR FIX */
+        /* --- SIDEBAR & OVERLAY --- */
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card); z-index: 9500; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--border); padding: 30px 20px; box-sizing: border-box; }
         .sidebar.active { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.2); }
-        
-        /* OVERLAY SIDEBAR */
         .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 9400; display: none; opacity: 0; transition: 0.3s; }
         .sidebar-overlay.active { display: block; opacity: 1; }
 
         .nav-item { padding: 14px 18px; border-radius: 14px; margin-bottom: 8px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 12px; transition: 0.2s; font-size: 14px; color: var(--text); }
         .nav-item:hover { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
 
+        /* --- HEADER --- */
         .sticky-header { position: sticky; top: 0; z-index: 1000; background: rgba(var(--card-rgb), 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; }
         .header-content { max-width: 1400px; margin: auto; display: flex; align-items: center; gap: 10px; }
         .btn-top { padding: 12px 6px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: white; font-size: 10px; flex: 1; text-transform: uppercase; }
 
         #searchDropdown { position: absolute; top: 70px; left: 0; width: 100%; padding: 15px; background: var(--card); border-bottom: 1px solid var(--border); display: none; z-index: 999; animation: fadeUp 0.3s ease; box-sizing: border-box; }
 
+        /* --- CONTAINER & CARDS --- */
         .container { max-width: 1400px; margin: 25px auto; padding: 0 15px; box-sizing: border-box; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-bottom: 25px; }
         
         .card { background: var(--card); padding: 22px; border-radius: 28px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03); animation: fadeUp 0.5s ease-out; transition: 0.3s; }
-        .card.minimized { padding: 15px 22px; }
-        .card.minimized .chart-container { display: none; }
-        .card h3 { font-size: 11px; margin: 0; color: var(--muted); text-transform: uppercase; font-weight: 800; }
+        .card h3 { font-size: 11px; margin: 0 0 18px 0; color: var(--muted); text-transform: uppercase; font-weight: 800; }
         
-        input, select, textarea { width: 100%; background: var(--bg); border: 1.5px solid var(--border); color: var(--text); padding: 15px; border-radius: 14px; box-sizing: border-box; font-size: 16px; outline: none; transition: 0.2s; }
+        input, select, textarea { width: 100%; background: var(--bg); border: 1.5px solid var(--border); color: var(--text); padding: 15px; border-radius: 14px; box-sizing: border-box; font-size: 16px; outline: none; transition: 0.2s; margin-bottom: 15px; }
         
         button.action { width: 100%; padding: 16px; border: none; border-radius: 18px; font-weight: 800; cursor: pointer; color: white; transition: 0.2s; font-size: 14px; display: block; }
-        .btn-p { background: var(--primary); } .btn-i { background: var(--info); } .btn-s { background: var(--success); }
+        .btn-p { background: var(--primary); } .btn-i { background: var(--info); } .btn-s { background: var(--success); } .btn-danger { background: var(--danger); }
 
         .search-box-main { display: flex; gap: 10px; margin-bottom: 20px; }
         .btn-panic { background: linear-gradient(45deg, var(--danger), #ff6b6b); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 20px; box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3); }
 
+        /* --- TABLE --- */
         .table-box { background: var(--card); border-radius: 28px; border: 1px solid var(--border); overflow-x: auto; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.03); }
         table { width: 100%; border-collapse: collapse; min-width: 650px; }
         th { background: rgba(var(--card-rgb), 0.5); padding: 20px 15px; font-size: 11px; color: var(--muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
@@ -79,21 +78,26 @@
         .row-critical { background: rgba(239, 68, 68, 0.08) !important; border-left: 6px solid var(--danger); }
         .pointer-icon { display: inline-block; animation: bobbing 0.8s infinite; margin-left: 8px; font-size: 16px; vertical-align: middle; }
 
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--overlay); display:none; justify-content:center; align-items:flex-start; z-index:8500; backdrop-filter: blur(12px); padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        /* --- MODALS --- */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--overlay); display:none; justify-content:center; align-items:flex-start; z-index:9600; backdrop-filter: blur(12px); padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .modal { background: var(--card); padding: 35px; border-radius: 35px; width: 100%; max-width: 500px; border: 1px solid var(--border); animation: bounceIn 0.3s; margin-top: 50px; margin-bottom: 50px; position: relative; }
         .modal h2 { margin: 0 0 25px 0; font-size: 22px; text-align: center; font-weight: 800; color: var(--text); }
-        .modal-footer { display: flex; gap: 10px; margin-top: 30px; }
         
-        .btn-m { flex: 1; padding: 18px; border-radius: 16px; border: none; font-weight: 800; cursor: pointer; font-size: 14px; text-align: center; }
+        .modal-footer { display: flex; gap: 10px; margin-top: 30px; }
+        .btn-m { flex: 1; padding: 18px; border-radius: 16px; border: none; font-weight: 800; cursor: pointer; font-size: 14px; text-align: center; color: white; transition: 0.2s; }
         .btn-secondary { background: var(--btn-gray); color: var(--btn-gray-text); }
 
         .switch-container { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--bg); border-radius: 14px; margin-top: 20px; font-size: 13px; font-weight: 700; }
-        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(18px); }
+        label.reset-label { font-size: 12px; font-weight: 800; color: var(--muted); display: block; margin-bottom: 8px; text-transform: uppercase; }
+
+        /* --- UX BUKTI FIX --- */
+        .proof-table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 18px; overflow: hidden; }
+        .proof-table th { background: var(--primary); color: white; padding: 12px; font-size: 10px; border: none; text-transform: uppercase; }
+        .proof-table td { background: var(--bg); padding: 14px; font-size: 13px; border-bottom: 1px solid var(--border); font-weight: 700; }
+        
+        /* --- HIST ITEM --- */
+        .hist-item { background: var(--bg); padding: 20px; border-radius: 20px; margin-bottom: 12px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .btn-proof { background: var(--info); color: white; border: none; padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -101,7 +105,7 @@
 <div id="pinScreen">
     <div class="pin-box">
         <img src="logo.png" style="width: 80px; margin-bottom: 20px; border-radius: 20px;">
-        <h2 style="margin: 0 0 10px 0;">VMS Access</h2>
+        <h2>VMS Access</h2>
         <p style="color: var(--muted); font-size: 13px; margin-bottom: 25px;">Masukkan PIN Rahasia Warung</p>
         <input type="password" id="pinInput" maxlength="4" inputmode="numeric" placeholder="****" style="text-align: center; font-size: 24px; letter-spacing: 15px;">
         <button class="action btn-p" style="margin-top: 20px;" onclick="checkPIN()">BUKA DASHBOARD</button>
@@ -124,13 +128,10 @@
     
     <div class="switch-container">
         <span>🔔 Notifikasi</span>
-        <label class="switch">
-            <input type="checkbox" id="notifToggle" checked>
-            <span class="slider"></span>
-        </label>
+        <input type="checkbox" id="notifToggle" checked style="width: 20px; height: 20px;">
     </div>
     
-    <button onclick="toggleSidebar()" style="width:100%; margin-top:30px; padding:12px; border:none; background:var(--bg); border-radius:12px; color:var(--muted); font-weight:800; cursor:pointer;">TUTUP MENU</button>
+    <button onclick="toggleSidebar()" style="width:100%; margin-top:30px; padding:18px; border:none; background:var(--bg); border-radius:16px; color:var(--muted); font-weight:800; cursor:pointer;">TUTUP MENU</button>
 </div>
 
 <div class="sticky-header">
@@ -152,16 +153,6 @@
 </div>
 
 <div class="container">
-    <div class="card" id="chartCard" style="margin-bottom: 25px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
-            <h3>📈 Tren Pendapatan</h3>
-            <button onclick="toggleMinimize()" style="background:none; border:none; color:var(--primary); font-weight:800; cursor:pointer; font-size:10px;">MINIMIZE</button>
-        </div>
-        <div class="chart-container">
-            <canvas id="miniChart" style="max-height: 200px;"></canvas>
-        </div>
-    </div>
-
     <button class="btn-panic" onclick="panicRestock()">
         <span>🚀</span> PANIC RESTOCK (STOK KRITIS)
     </button>
@@ -182,17 +173,17 @@
     <div class="grid">
         <div class="card">
             <h3>🚚 Pindahkan Stok</h3>
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <div style="flex:0.5"><label>ID</label><input type="number" id="idP" inputmode="numeric"></div>
-                <div style="flex:1"><label>QTY</label><input type="number" id="qtyP" inputmode="numeric"></div>
+            <div style="display:flex; gap:10px; margin-bottom:5px;">
+                <div style="flex:0.5"><label style="font-size:10px; font-weight:800;">ID</label><input type="number" id="idP" inputmode="numeric"></div>
+                <div style="flex:1"><label style="font-size:10px; font-weight:800;">QTY</label><input type="number" id="qtyP" inputmode="numeric"></div>
             </div>
             <button class="action btn-i" onclick="doMove()">Pindahkan ke Etalase</button>
         </div>
         <div class="card">
             <h3>📦 Restock Kamar</h3>
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <div style="flex:0.5"><label>ID</label><input type="number" id="idR" inputmode="numeric"></div>
-                <div style="flex:1"><label>BELI BARU</label><input type="number" id="qtyR" inputmode="numeric"></div>
+            <div style="display:flex; gap:10px; margin-bottom:5px;">
+                <div style="flex:0.5"><label style="font-size:10px; font-weight:800;">ID</label><input type="number" id="idR" inputmode="numeric"></div>
+                <div style="flex:1"><label style="font-size:10px; font-weight:800;">QTY</label><input type="number" id="qtyR" inputmode="numeric"></div>
             </div>
             <button class="action btn-s" onclick="doRestock()">Simpan ke Kamar</button>
         </div>
@@ -206,38 +197,56 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="mAnalytics"><div class="modal" style="max-width: 600px;">
-    <h2>Grafik Performa Warung</h2>
-    <canvas id="fullChart" style="width:100%; height:300px;"></canvas>
-    <button class="btn-m btn-p" style="width:100%; margin-top:25px;" onclick="closeModal('mAnalytics')">TUTUP ANALIS</button>
+<div class="modal-overlay" id="mReset"><div class="modal">
+    <h2>Reset / Hapus Data</h2>
+    <label class="reset-label">Mode</label>
+    <select id="rMode" onchange="toggleResetUI()">
+        <option value="single">Satu Baris (ID)</option>
+        <option value="all">Semua Baris</option>
+    </select>
+    <div id="resetIdGroup">
+        <label class="reset-label">ID Voucher</label>
+        <input type="number" id="rID" inputmode="numeric" placeholder="Masukkan ID">
+    </div>
+    <label class="reset-label">Tindakan</label>
+    <select id="rCol">
+        <option value="1">1. Reset Laku Saja</option>
+        <option value="2">2. Reset Etalase Saja</option>
+        <option value="3">3. Reset Kamar Saja</option>
+        <option value="4">4. Reset Laku & Etalase</option>
+        <option value="5">5. Hapus Voucher Permanen</option>
+    </select>
+    <div class="modal-footer">
+        <button class="btn-m btn-secondary" onclick="closeModal('mReset')">Batal</button>
+        <button class="btn-m btn-danger" style="color:white" onclick="confirmReset()">Eksekusi</button>
+    </div>
+</div></div>
+
+<div class="modal-overlay" id="mProof"><div class="modal" style="max-width:550px">
+    <h2 id="proofTitle" style="font-size:20px; text-align:center;">Rincian Transaksi</h2>
+    <div id="proofBody" style="max-height:400px; overflow-y:auto; padding-right:5px;">
+        </div>
+    <button class="btn-m btn-p" style="width:100%; margin-top:25px;" onclick="closeModal('mProof')">TUTUP</button>
 </div></div>
 
 <div class="modal-overlay" id="mSequential"><div class="modal">
-    <div style="text-align:center"><span id="seqProgress" style="font-size:10px; font-weight:800; color:var(--primary);">ITEM 1 DARI 10</span><h2 id="seqName" style="margin:10px 0 30px 0; font-size:28px;">V AXIS 14</h2></div>
+    <div style="text-align:center"><span id="seqProgress" style="font-size:10px; font-weight:800; color:var(--primary);">ITEM 1 DARI 10</span><h2 id="seqName" style="margin:10px 0 30px 0; font-size:28px;">NAMA VOUCHER</h2></div>
     <input type="hidden" id="seqIdInput">
-    <label style="font-size:12px; font-weight:800; color:var(--muted); display:block; margin-bottom:12px;">SISA DI ETALASE:</label>
+    <label class="reset-label">SISA DI ETALASE:</label>
     <input type="number" id="seqSisaInput" inputmode="numeric">
-    <div class="modal-footer"><button class="btn-m btn-secondary" onclick="prevSeq()">BACK</button><button class="btn-m" style="background:var(--success); color:white" onclick="saveCurrentSeq()">SIMPAN</button><button class="btn-m btn-secondary" onclick="nextSeq()">NEXT</button></div>
-    <button onclick="closeModal('mSequential')" style="width:100%; margin-top:30px; background:none; border:none; color:var(--muted); font-size:12px; font-weight:700;">Berhenti</button>
+    <div class="modal-footer">
+        <button class="btn-m btn-secondary" onclick="prevSeq()">BACK</button>
+        <button class="btn-m" style="background:var(--success)" onclick="saveCurrentSeq()">SIMPAN</button>
+        <button class="btn-m btn-secondary" onclick="nextSeq()">NEXT</button>
+    </div>
+    <button onclick="closeModal('mSequential')" style="width:100%; margin-top:30px; background:none; border:none; color:var(--muted); font-size:12px; font-weight:700; cursor:pointer;">Berhenti</button>
 </div></div>
 
-<div class="modal-overlay" id="mReport"><div class="modal">
-    <h2>Laporan WA</h2>
-    <p id="tSis" style="font-weight:800; color:var(--primary); text-align:center; font-size:22px; margin-bottom:20px;"></p>
-    <label>Uang Yang Ada (Fisik):</label>
-    <input type="number" id="iF" inputmode="numeric"><div class="modal-footer"><button class="btn-m btn-secondary" onclick="closeModal('mReport')">Batal</button><button class="btn-m" style="background:var(--primary); color:white" onclick="genFinal()">Generate</button></div>
-</div></div>
-
-<div class="modal-overlay" id="mView"><div class="modal">
-    <h2>Salin Laporan</h2>
-    <textarea id="repRes" readonly style="width:100%; height:300px; background:var(--bg); border:1.5px solid var(--border); border-radius:20px; padding:18px; font-size:13px; color:var(--text); outline:none; line-height:1.6;"></textarea>
-    <div class="modal-footer"><button class="btn-m" style="background:var(--success); color:white" onclick="copyClose()">Copy & Tutup</button></div>
-</div></div>
-
-<div class="modal-overlay" id="mHistory"><div class="modal" style="max-width:650px"><h2>Riwayat</h2><div id="histContent" style="max-height:400px; overflow-y:auto; margin-bottom:20px;"></div><button class="btn-m btn-p" style="width:100%" onclick="closeModal('mHistory')">Tutup</button></div></div>
-<div class="modal-overlay" id="mProof"><div class="modal" style="max-width:550px"><h2 id="proofTitle">Bukti</h2><div id="proofBody" style="max-height:380px; overflow-y:auto; background:var(--bg); border-radius:24px; border:1px solid var(--border); padding:10px;"></div><button class="btn-m btn-secondary" style="width:100%; margin-top:20px" onclick="closeModal('mProof')">TUTUP</button></div></div>
-<div class="modal-overlay" id="mAdd"><div class="modal"><h2>Voucher Baru</h2><div style="margin-bottom:15px"><label>Nama Lengkap:</label><input type="text" id="aL"></div><div style="margin-bottom:15px"><label>Nama WA:</label><input type="text" id="aW"></div><div style="margin-bottom:15px"><label>Harga Jual:</label><input type="number" id="aH" inputmode="numeric"></div><div class="modal-footer"><button class="btn-m btn-secondary" onclick="closeModal('mAdd')">Batal</button><button class="btn-m" style="background:var(--primary); color:white" onclick="saveNew()">Simpan</button></div></div></div>
-<div class="modal-overlay" id="mReset"><div class="modal"><h2>Reset Data</h2><label>ID:</label><input type="number" id="rID" inputmode="numeric" style="margin-bottom:15px"><label>Aksi:</label><select id="rCol"><option value="terjual">Reset Laku</option><option value="stok_etalase">Reset Etalase</option><option value="DELETE">Hapus Voucher</option></select><div class="modal-footer"><button class="btn-m btn-secondary" onclick="closeModal('mReset')">Batal</button><button class="btn-m" style="background:var(--danger); color:white" onclick="confirmReset()">Eksekusi</button></div></div></div>
+<div class="modal-overlay" id="mAnalytics"><div class="modal" style="max-width: 800px;"><h2>📊 Performa Warung</h2><div style="background:var(--bg); padding:15px; border-radius:20px;"><canvas id="fullChart" style="width:100%; height:400px;"></canvas></div><button class="btn-m btn-p" style="width:100%; margin-top:25px;" onclick="closeModal('mAnalytics')">TUTUP ANALIS</button></div></div>
+<div class="modal-overlay" id="mReport"><div class="modal"><h2>Laporan WA</h2><p id="tSis" style="font-weight:800; color:var(--primary); text-align:center; font-size:22px; margin-bottom:20px;"></p><label class="reset-label">Uang Fisik:</label><input type="number" id="iF" inputmode="numeric"><div class="modal-footer"><button class="btn-m btn-secondary" onclick="closeModal('mReport')">Batal</button><button class="btn-m btn-p" onclick="genFinal()">Generate</button></div></div></div>
+<div class="modal-overlay" id="mView"><div class="modal"><h2>Salin Laporan</h2><textarea id="repRes" readonly style="width:100%; height:300px; padding:15px; font-size:13px;"></textarea><button class="btn-m btn-p" style="width:100%; margin-top:15px;" onclick="copyClose()">Copy & Tutup</button></div></div>
+<div class="modal-overlay" id="mHistory"><div class="modal" style="max-width:650px"><h2>Riwayat</h2><div id="histContent" style="max-height:400px; overflow-y:auto;"></div><button class="btn-m btn-p" style="width:100%; margin-top:20px;" onclick="closeModal('mHistory')">Tutup</button></div></div>
+<div class="modal-overlay" id="mAdd"><div class="modal"><h2>Voucher Baru</h2><input type="text" id="aL" placeholder="Nama Lengkap"><input type="text" id="aW" placeholder="Nama WA"><input type="number" id="aH" placeholder="Harga Jual"><button class="btn-m btn-p" style="width:100%; margin-top:10px;" onclick="saveNew()">Simpan</button></div></div>
 
 <script>
     const SB_URL = "https://cphgjbsdzslyyaduherc.supabase.co";
@@ -247,123 +256,69 @@
     let gTotal = 0; let gItem = 0; let seqData = []; let seqIdx = 0; let gBreakdown = "";
     let myChart = null;
 
-    // --- LOGIKA BARU: SIDEBAR FIX ---
-    function toggleSidebar() { 
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
+    // --- RESET UI & LOGIC PRO (FIXED) ---
+    function toggleResetUI() {
+        const mode = document.getElementById('rMode').value;
+        document.getElementById('resetIdGroup').style.display = (mode === 'all') ? 'none' : 'block';
     }
 
-    function filterData(inputId) {
-        const query = document.getElementById(inputId).value.toLowerCase();
-        const category = document.getElementById('categoryFilter').value;
-        const rows = document.querySelectorAll('#vTableBody tr');
-        rows.forEach(row => {
-            const name = row.cells[1].innerText.toLowerCase();
-            const isKritis = row.classList.contains('row-critical');
-            const matchQuery = name.includes(query);
-            let matchCategory = true;
-            if (category === 'kritis') matchCategory = isKritis;
-            if (category === 'aman') matchCategory = !isKritis;
-            row.style.display = (matchQuery && matchCategory) ? '' : 'none';
-        });
+    async function confirmReset() {
+        const mode = document.getElementById('rMode').value;
+        const action = document.getElementById('rCol').value;
+        const id = document.getElementById('rID').value;
+        if(mode === 'single' && !id) return alert("Isi ID-nya dulu cuy!");
+        if(!confirm("Yakin mau eksekusi? Gak bisa dibatalin loh!")) return;
+
+        let query = client.from('vouchers');
+        if(mode === 'single') query = query.eq('id', id);
+        else query = query.gt('id', 0);
+
+        let payload = {};
+        if(action === "1") payload = { terjual: 0 };
+        else if(action === "2") payload = { stok_etalase: 0 };
+        else if(action === "3") payload = { stok_kamar: 0 };
+        else if(action === "4") payload = { terjual: 0, stok_etalase: 0 };
+
+        if(action === "5") await query.delete();
+        else await query.update(payload);
+
+        alert("Berhasil!"); closeModal('mReset'); refresh();
     }
 
-    function toggleMinimize() {
-        const card = document.getElementById('chartCard');
-        const btn = card.querySelector('button');
-        card.classList.toggle('minimized');
-        btn.innerText = card.classList.contains('minimized') ? 'EXPAND' : 'MINIMIZE';
-    }
-
-    async function panicRestock() {
-        const { data } = await client.from('vouchers').select('*').lt('stok_etalase', 2).eq('is_ignored', false).order('id', { ascending: true });
-        if (data && data.length > 0) {
-            seqData = data; seqIdx = 0; renderSeq(); openModal('mSequential');
-        } else {
-            alert("Stok aman semua cuy! Chill dulu.");
+    // --- BUKTI UX IMPROVEMENT (FIXED) ---
+    async function showProof(tgl) {
+        const { data } = await client.from('laporan_harian').select('detail_terjual').eq('tanggal', tgl).single();
+        if(data && data.detail_terjual) {
+            let html = `<table class="proof-table"><thead><tr><th>PRODUK</th><th>QTY</th><th>SUB</th></tr></thead><tbody>`;
+            data.detail_terjual.forEach(v => {
+                html += `<tr><td>${v.nama_wa}</td><td style="text-align:center">${v.terjual}</td><td style="text-align:right">Rp${((v.terjual*v.harga_jual)/1000).toFixed(0)}k</td></tr>`;
+            });
+            html += `</tbody></table>`;
+            document.getElementById('proofTitle').innerText = `Rincian ${tgl}`;
+            document.getElementById('proofBody').innerHTML = html;
+            openModal('mProof');
         }
+    }
+
+    // --- LOGIKA SIDEBAR ---
+    function toggleSidebar() { 
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('sidebarOverlay').classList.toggle('active');
     }
 
     function toggleNavSearch() {
         const dropdown = document.getElementById('searchDropdown');
-        const input = document.getElementById('headerSearchInput');
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        if (dropdown.style.display === 'block') input.focus();
+        dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
+        if (dropdown.style.display === 'block') document.getElementById('headerSearchInput').focus();
     }
 
+    // --- CORE SYSTEM (LOGIN & REFRESH) ---
     function checkPIN() {
-        const pin = document.getElementById('pinInput').value;
-        if(pin === "1234") {
-            document.getElementById('pinScreen').style.opacity = "0";
-            setTimeout(() => document.getElementById('pinScreen').style.display = "none", 500);
-            refresh(); loadChart();
-        } else {
-            alert("PIN SALAH CUY!");
-            document.getElementById('pinInput').value = "";
-        }
+        if(document.getElementById('pinInput').value === "1234") {
+            document.getElementById('pinScreen').style.display = "none";
+            refresh();
+        } else { alert("PIN SALAH!"); }
     }
-
-    async function loadChart() {
-        const { data } = await client.from('laporan_harian').select('tanggal, total_pendapatan_sistem').order('tanggal', { ascending: true }).limit(7);
-        if(!data) return;
-        const labels = data.map(h => h.tanggal.split('-').slice(1).join('/'));
-        const values = data.map(h => h.total_pendapatan_sistem);
-        if(myChart) myChart.destroy();
-        const ctx = document.getElementById('miniChart').getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Cuan (IDR)',
-                    data: values,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 5,
-                    pointBackgroundColor: '#2563eb'
-                }]
-            },
-            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } } }
-        });
-    }
-
-    function openModal(id) { document.getElementById(id).style.display='flex'; }
-    function closeModal(id) { document.getElementById(id).style.display='none'; }
-
-    async function startSequentialUpdate() {
-        const { data } = await client.from('vouchers').select('*').order('id', { ascending: true });
-        if (data && data.length > 0) { seqData = data; seqIdx = 0; renderSeq(); openModal('mSequential'); }
-    }
-    
-    function renderSeq() {
-        const v = seqData[seqIdx];
-        document.getElementById('seqProgress').innerText = `ITEM ${seqIdx + 1} DARI ${seqData.length}`;
-        document.getElementById('seqIdInput').value = v.id;
-        document.getElementById('seqName').innerText = v.nama_wa;
-        document.getElementById('seqSisaInput').value = v.stok_etalase;
-        document.getElementById('seqSisaInput').focus();
-    }
-    
-    async function saveCurrentSeq() {
-        const v = seqData[seqIdx]; 
-        const sisa = parseInt(document.getElementById('seqSisaInput').value);
-        if(!isNaN(sisa)) {
-            await client.from('vouchers').update({ 
-                stok_etalase: sisa, 
-                terjual: v.terjual + (v.stok_etalase - sisa), 
-                is_ignored: false 
-            }).eq('id', v.id);
-            if(seqIdx < seqData.length - 1) { nextSeq(); } else { closeModal('mSequential'); refresh(); }
-        }
-    }
-    
-    function nextSeq() { if(seqIdx < seqData.length - 1) { seqIdx++; renderSeq(); } }
-    function prevSeq() { if(seqIdx > 0) { seqIdx--; renderSeq(); } }
 
     async function refresh() {
         const { data } = await client.from('vouchers').select('*').order('id', { ascending: true });
@@ -380,71 +335,49 @@
         });
     }
 
-    async function openLaporan() {
-        const { data } = await client.from('vouchers').select('*').order('id', { ascending: true });
-        gBreakdown = ""; data.forEach(v => { gBreakdown += ` ${v.nama_wa} = ${v.stok_etalase}\n`; });
-        document.getElementById('tSis').innerText = `Sistem: Rp${gTotal.toLocaleString()}`;
-        openModal('mReport');
+    // --- SEARCH & FILTER ---
+    function filterData(inputId) {
+        const query = document.getElementById(inputId).value.toLowerCase();
+        const cat = document.getElementById('categoryFilter').value;
+        const rows = document.querySelectorAll('#vTableBody tr');
+        rows.forEach(row => {
+            const name = row.cells[1].innerText.toLowerCase();
+            const isCrit = row.classList.contains('row-critical');
+            const matchQ = name.includes(query);
+            let matchC = (cat === 'all') || (cat === 'kritis' ? isCrit : !isCrit);
+            row.style.display = (matchQ && matchC) ? '' : 'none';
+        });
     }
 
-    function genFinal() {
-        const f = parseInt(document.getElementById('iF').value) || 0;
-        const n = new Date(); const m = ['januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember'];
-        const ts = `*${n.getDate()}/${m[n.getMonth()]}/${String(n.getFullYear()).slice(-2)} ${n.getHours()}:${n.getMinutes().toString().padStart(2, '0')}:${n.getSeconds().toString().padStart(2, '0')}*`;
-        document.getElementById('repRes').value = `${ts}\n\n${gBreakdown}\n------------------\n💰 Target: Rp${gTotal.toLocaleString()}\n💵 Uang Yang Ada: Rp${f.toLocaleString()}\n🚨 +-: Rp${(f-gTotal).toLocaleString()}`;
-        closeModal('mReport'); openModal('mView');
+    // --- PANIC RESTOCK (STOK TIPIS) ---
+    async function panicRestock() {
+        const { data } = await client.from('vouchers').select('*').lt('stok_etalase', 2).eq('is_ignored', false).order('id', { ascending: true });
+        if (data && data.length > 0) { seqData = data; seqIdx = 0; renderSeq(); openModal('mSequential'); }
+        else { alert("Aman semua cuy!"); }
     }
 
-    async function saveDailySnapshot() {
-        if(!confirm("Tutup buku hari ini?")) return;
-        const { data: currentSales } = await client.from('vouchers').select('nama_wa, terjual, harga_jual').gt('terjual', 0);
-        const f = prompt("Masukkan total uang fisik (IDR):", "0") || 0;
-        const uangFisik = parseInt(f);
-        await client.from('laporan_harian').insert([{ 
-            total_terjual_item: gItem, 
-            total_pendapatan_sistem: gTotal, 
-            uang_fisik_nyata: uangFisik, 
-            selisih: uangFisik - gTotal, 
-            detail_terjual: currentSales 
-        }]);
-        await client.from('vouchers').update({ terjual: 0 }).neq('id', 0);
-        refresh(); loadChart(); alert("Laporan harian berhasil disimpan!");
-    }
-
-    async function openHistory() {
-        const { data } = await client.from('laporan_harian').select('*').order('tanggal', { ascending: false });
-        let h = ''; data.forEach(x => { h += `<div class="hist-item"><div><small style="font-weight:800; color:var(--muted)">${x.tanggal}</small><br><b style="font-size:18px">${x.total_pendapatan_sistem/1000}k</b></div><button class="btn-proof" onclick="showProof('${x.tanggal}')">🔍 BUKTI</button></div>`; });
-        document.getElementById('histContent').innerHTML = h || '<p>Kosong.</p>';
-        openModal('mHistory');
-    }
-
-    async function showProof(tgl) {
-        const { data } = await client.from('laporan_harian').select('detail_terjual').eq('tanggal', tgl).single();
-        if(data && data.detail_terjual) {
-            let table = '<table style="width:100%; border-collapse:collapse;"><tr><th class="td-left">Voucher</th><th>Qty</th><th>Sub</th></tr>';
-            data.detail_terjual.forEach(v => { table += `<tr><td class="td-left">${v.nama_wa}</td><td>${v.terjual}</td><td>${(v.terjual*v.harga_jual)/1000}k</td></tr>`; });
-            document.getElementById('proofTitle').innerText = `Rincian ${tgl}`;
-            document.getElementById('proofBody').innerHTML = table + '</table>';
-            openModal('mProof');
-        }
-    }
-
+    // --- LOGIKA LAMA (SANGAT DIJAGA) ---
+    function openModal(id) { document.getElementById(id).style.display='flex'; }
+    function closeModal(id) { document.getElementById(id).style.display='none'; }
+    async function startSequentialUpdate() { const { data } = await client.from('vouchers').select('*').order('id', { ascending: true }); if (data) { seqData = data; seqIdx = 0; renderSeq(); openModal('mSequential'); } }
+    function renderSeq() { const v = seqData[seqIdx]; document.getElementById('seqProgress').innerText = `ITEM ${seqIdx + 1} DARI ${seqData.length}`; document.getElementById('seqName').innerText = v.nama_wa; document.getElementById('seqSisaInput').value = v.stok_etalase; document.getElementById('seqSisaInput').focus(); }
+    async function saveCurrentSeq() { const v = seqData[seqIdx]; const s = parseInt(document.getElementById('seqSisaInput').value); if(!isNaN(s)) { await client.from('vouchers').update({ stok_etalase: s, terjual: v.terjual + (v.stok_etalase - s), is_ignored: false }).eq('id', v.id); if(seqIdx < seqData.length - 1) nextSeq(); else { closeModal('mSequential'); refresh(); } } }
+    function nextSeq() { if(seqIdx < seqData.length - 1) { seqIdx++; renderSeq(); } }
+    function prevSeq() { if(seqIdx > 0) { seqIdx--; renderSeq(); } }
+    async function openLaporan() { const { data } = await client.from('vouchers').select('*').order('id', { ascending: true }); gBreakdown = ""; data.forEach(v => { gBreakdown += ` ${v.nama_wa} = ${v.stok_etalase}\n`; }); document.getElementById('tSis').innerText = `Sistem: Rp${gTotal.toLocaleString()}`; openModal('mReport'); }
+    function genFinal() { const f = parseInt(document.getElementById('iF').value) || 0; const n = new Date(); const m = ['januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember']; const ts = `*${n.getDate()}/${m[n.getMonth()]}/${String(n.getFullYear()).slice(-2)} ${n.getHours()}:${n.getMinutes().toString().padStart(2, '0')}*`; document.getElementById('repRes').value = `${ts}\n\n${gBreakdown}\n------------------\n💰 Target: Rp${gTotal.toLocaleString()}\n💵 Uang Fisik: Rp${f.toLocaleString()}\n🚨 Selisih: Rp${(f-gTotal).toLocaleString()}`; closeModal('mReport'); openModal('mView'); }
+    async function saveDailySnapshot() { if(!confirm("Tutup hari ini?")) return; const { data: s } = await client.from('vouchers').select('nama_wa, terjual, harga_jual').gt('terjual', 0); const f = prompt("Uang fisik (IDR):", "0") || 0; await client.from('laporan_harian').insert([{ total_terjual_item: gItem, total_pendapatan_sistem: gTotal, uang_fisik_nyata: parseInt(f), selisih: parseInt(f) - gTotal, detail_terjual: s }]); await client.from('vouchers').update({ terjual: 0 }).neq('id', 0); refresh(); alert("Sukses!"); }
+    async function openHistory() { const { data } = await client.from('laporan_harian').select('*').order('tanggal', { ascending: false }); let h = ''; data.forEach(x => { h += `<div class="hist-item"><div><small>${x.tanggal}</small><br><b>${x.total_pendapatan_sistem/1000}k</b></div><button class="btn-proof" onclick="showProof('${x.tanggal}')">🔍 BUKTI</button></div>`; }); document.getElementById('histContent').innerHTML = h || 'Kosong.'; openModal('mHistory'); }
     async function toggleMute(id, s) { await client.from('vouchers').update({ is_ignored: s }).eq( 'id', id); refresh(); }
     async function doMove() { const id = document.getElementById('idP').value; const q = parseInt(document.getElementById('qtyP').value); const { data: v } = await client.from('vouchers').select('stok_kamar, stok_etalase').eq('id', id).single(); if(v && v.stok_kamar >= q) { await client.from('vouchers').update({ stok_kamar: v.stok_kamar - q, stok_etalase: v.stok_etalase + q, is_ignored: false }).eq('id', id); refresh(); } }
     async function doRestock() { const id = document.getElementById('idR').value; const q = parseInt(document.getElementById('qtyR').value); const { data: v } = await client.from('vouchers').select('stok_kamar').eq('id', id).single(); if(v) { await client.from('vouchers').update({ stok_kamar: v.stok_kamar + q, is_ignored: false }).eq('id', id); refresh(); } }
-    async function confirmReset() { const col = document.getElementById('rCol').value; const id = document.getElementById('rID').value; if(col === "DELETE") { if(confirm("Hapus?")) await client.from('vouchers').delete().eq('id', id); } else { await client.from('vouchers').update({ [col]: 0 }).eq('id', id); } closeModal('mReset'); refresh(); }
+    async function loadChart() { const { data } = await client.from('laporan_harian').select('tanggal, total_pendapatan_sistem').order('tanggal', { ascending: true }).limit(10); if(!data) return; if(myChart) myChart.destroy(); const ctx = document.getElementById('fullChart').getContext('2d'); myChart = new Chart(ctx, { type: 'line', data: { labels: data.map(h => h.tanggal.split('-').slice(1).join('/')), datasets: [{ label: 'Cuan (IDR)', data: data.map(h => h.total_pendapatan_sistem), borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.1)', borderWidth: 4, fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false } }); }
     function copyClose() { const t = document.getElementById('repRes'); t.select(); navigator.clipboard.writeText(t.value); closeModal('mView'); alert("Copy Berhasil!"); }
     function saveNew() { const p = { nama_lengkap: document.getElementById('aL').value, nama_wa: document.getElementById('aW').value, harga_jual: parseInt(document.getElementById('aH').value), stok_kamar: 0, stok_etalase: 0 }; client.from('vouchers').insert([p]).then(() => { closeModal('mAdd'); refresh(); }); }
-    
-    function toggleTheme() { 
-        const h = document.documentElement; 
-        const nxt = h.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; 
-        h.setAttribute('data-theme', nxt); 
-        document.getElementById('themeIcon').innerText = nxt === 'light' ? '🌞' : '🌜'; 
-        localStorage.setItem('theme', nxt); 
-    }
+    function toggleTheme() { const h = document.documentElement; const nxt = h.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; h.setAttribute('data-theme', nxt); document.getElementById('themeIcon').innerText = nxt === 'light' ? '🌞' : '🌜'; localStorage.setItem('theme', nxt); }
     
     if(localStorage.getItem('theme')) document.documentElement.setAttribute('data-theme', localStorage.getItem('theme'));
+    toggleResetUI();
 </script>
 </body>
 </html>
