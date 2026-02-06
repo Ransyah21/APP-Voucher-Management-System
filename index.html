@@ -37,8 +37,14 @@
 
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: background 0.3s; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card); z-index: 9000; transition: 0.3s ease-in-out; border-right: 1px solid var(--border); padding: 30px 20px; box-sizing: border-box; }
+        /* SIDEBAR FIX */
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card); z-index: 9500; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--border); padding: 30px 20px; box-sizing: border-box; }
         .sidebar.active { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.2); }
+        
+        /* OVERLAY SIDEBAR */
+        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 9400; display: none; opacity: 0; transition: 0.3s; }
+        .sidebar-overlay.active { display: block; opacity: 1; }
+
         .nav-item { padding: 14px 18px; border-radius: 14px; margin-bottom: 8px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 12px; transition: 0.2s; font-size: 14px; color: var(--text); }
         .nav-item:hover { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
 
@@ -46,13 +52,11 @@
         .header-content { max-width: 1400px; margin: auto; display: flex; align-items: center; gap: 10px; }
         .btn-top { padding: 12px 6px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: white; font-size: 10px; flex: 1; text-transform: uppercase; }
 
-        /* Dropdown Search Header */
         #searchDropdown { position: absolute; top: 70px; left: 0; width: 100%; padding: 15px; background: var(--card); border-bottom: 1px solid var(--border); display: none; z-index: 999; animation: fadeUp 0.3s ease; box-sizing: border-box; }
 
         .container { max-width: 1400px; margin: 25px auto; padding: 0 15px; box-sizing: border-box; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-bottom: 25px; }
         
-        /* Fitur Minimize Chart */
         .card { background: var(--card); padding: 22px; border-radius: 28px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03); animation: fadeUp 0.5s ease-out; transition: 0.3s; }
         .card.minimized { padding: 15px 22px; }
         .card.minimized .chart-container { display: none; }
@@ -63,7 +67,6 @@
         button.action { width: 100%; padding: 16px; border: none; border-radius: 18px; font-weight: 800; cursor: pointer; color: white; transition: 0.2s; font-size: 14px; display: block; }
         .btn-p { background: var(--primary); } .btn-i { background: var(--info); } .btn-s { background: var(--success); }
 
-        /* Search & Panic Buttons */
         .search-box-main { display: flex; gap: 10px; margin-bottom: 20px; }
         .btn-panic { background: linear-gradient(45deg, var(--danger), #ff6b6b); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 20px; box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3); }
 
@@ -83,11 +86,7 @@
         
         .btn-m { flex: 1; padding: 18px; border-radius: 16px; border: none; font-weight: 800; cursor: pointer; font-size: 14px; text-align: center; }
         .btn-secondary { background: var(--btn-gray); color: var(--btn-gray-text); }
-        
-        .hist-item { background: var(--bg); padding: 20px; border-radius: 20px; margin-bottom: 12px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .btn-proof { background: var(--info); color: white; border: none; padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; }
 
-        /* Notif Switch Styles */
         .switch-container { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--bg); border-radius: 14px; margin-top: 20px; font-size: 13px; font-weight: 700; }
         .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -109,6 +108,8 @@
     </div>
 </div>
 
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
 <div class="sidebar" id="sidebar">
     <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:35px;">
         <img src="logo.png" style="width: 80px; height: 80px; border-radius: 20px; margin-bottom: 10px; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
@@ -128,12 +129,13 @@
             <span class="slider"></span>
         </label>
     </div>
+    
+    <button onclick="toggleSidebar()" style="width:100%; margin-top:30px; padding:12px; border:none; background:var(--bg); border-radius:12px; color:var(--muted); font-weight:800; cursor:pointer;">TUTUP MENU</button>
 </div>
 
 <div class="sticky-header">
     <div class="header-content">
         <button onclick="toggleSidebar()" style="background:none; border:none; font-size:28px; color:var(--text); cursor:pointer; padding:0 8px;">☰</button>
-        
         <button onclick="toggleNavSearch()" style="background:none; border:none; font-size:24px; cursor:pointer;">🔍</button>
         
         <div class="main-actions" style="display:flex; gap:8px; flex:1; justify-content: flex-end;">
@@ -245,26 +247,29 @@
     let gTotal = 0; let gItem = 0; let seqData = []; let seqIdx = 0; let gBreakdown = "";
     let myChart = null;
 
-    // --- LOGIKA BARU: FILTER & SEARCH ---
+    // --- LOGIKA BARU: SIDEBAR FIX ---
+    function toggleSidebar() { 
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+
     function filterData(inputId) {
         const query = document.getElementById(inputId).value.toLowerCase();
         const category = document.getElementById('categoryFilter').value;
         const rows = document.querySelectorAll('#vTableBody tr');
-
         rows.forEach(row => {
             const name = row.cells[1].innerText.toLowerCase();
             const isKritis = row.classList.contains('row-critical');
-            
             const matchQuery = name.includes(query);
             let matchCategory = true;
             if (category === 'kritis') matchCategory = isKritis;
             if (category === 'aman') matchCategory = !isKritis;
-
             row.style.display = (matchQuery && matchCategory) ? '' : 'none';
         });
     }
 
-    // --- LOGIKA BARU: MINIMIZE CHART ---
     function toggleMinimize() {
         const card = document.getElementById('chartCard');
         const btn = card.querySelector('button');
@@ -272,7 +277,6 @@
         btn.innerText = card.classList.contains('minimized') ? 'EXPAND' : 'MINIMIZE';
     }
 
-    // --- LOGIKA BARU: PANIC RESTOCK ---
     async function panicRestock() {
         const { data } = await client.from('vouchers').select('*').lt('stok_etalase', 2).eq('is_ignored', false).order('id', { ascending: true });
         if (data && data.length > 0) {
@@ -282,7 +286,6 @@
         }
     }
 
-    // --- LOGIKA BARU: NAV SEARCH ---
     function toggleNavSearch() {
         const dropdown = document.getElementById('searchDropdown');
         const input = document.getElementById('headerSearchInput');
@@ -290,21 +293,18 @@
         if (dropdown.style.display === 'block') input.focus();
     }
 
-    // --- SISTEM LOGIN PIN ---
     function checkPIN() {
         const pin = document.getElementById('pinInput').value;
         if(pin === "1234") {
             document.getElementById('pinScreen').style.opacity = "0";
             setTimeout(() => document.getElementById('pinScreen').style.display = "none", 500);
-            refresh();
-            loadChart();
+            refresh(); loadChart();
         } else {
             alert("PIN SALAH CUY!");
             document.getElementById('pinInput').value = "";
         }
     }
 
-    // --- SISTEM ANALISIS GRAFIK ---
     async function loadChart() {
         const { data } = await client.from('laporan_harian').select('tanggal, total_pendapatan_sistem').order('tanggal', { ascending: true }).limit(7);
         if(!data) return;
@@ -332,7 +332,6 @@
         });
     }
 
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
     function openModal(id) { document.getElementById(id).style.display='flex'; }
     function closeModal(id) { document.getElementById(id).style.display='none'; }
 
@@ -359,7 +358,6 @@
                 terjual: v.terjual + (v.stok_etalase - sisa), 
                 is_ignored: false 
             }).eq('id', v.id);
-            // Auto next after save
             if(seqIdx < seqData.length - 1) { nextSeq(); } else { closeModal('mSequential'); refresh(); }
         }
     }
@@ -400,10 +398,8 @@
     async function saveDailySnapshot() {
         if(!confirm("Tutup buku hari ini?")) return;
         const { data: currentSales } = await client.from('vouchers').select('nama_wa, terjual, harga_jual').gt('terjual', 0);
-        // Kita butuh input uang fisik, bisa pakai modal report yang ada
         const f = prompt("Masukkan total uang fisik (IDR):", "0") || 0;
         const uangFisik = parseInt(f);
-        
         await client.from('laporan_harian').insert([{ 
             total_terjual_item: gItem, 
             total_pendapatan_sistem: gTotal, 
