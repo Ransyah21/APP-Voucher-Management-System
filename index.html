@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warung Voucher - Mobile Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 15px; }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        
+        /* Panel Atas - Responsive Grid */
+        .panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #007bff; }
+        .card h3 { margin-top: 0; font-size: 16px; color: #555; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        .input-group { margin: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+        input { width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; text-align: center; font-size: 14px; }
+        button { width: 100%; padding: 10px; cursor: pointer; border: none; border-radius: 6px; background: #007bff; color: white; font-weight: bold; transition: 0.3s; }
+        button:active { transform: scale(0.98); }
+
+        /* Tabel Pro - Center Alignment */
+        .table-container { background: white; border-radius: 12px; overflow-x: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: center; font-size: 14px; } /* FITUR CENTER */
+        th { background: #f8f9fa; color: #666; font-weight: 600; }
+        tr:hover { background: #f1f1f1; }
+        .terjual-text { color: #dc3545; font-weight: bold; }
+
+        /* Tombol Bawah */
+        .footer-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 25px; }
+        .btn-wa { background: #25D366; width: 100%; max-width: 400px; height: 50px; font-size: 16px; border-radius: 10px; }
+        .btn-reset { background: #ffc107; color: #333; }
+        .btn-seed { background: #6f42c1; }
+        .btn-add { background: #6c757d; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📱 Warung Voucher Mobile 2026</h2>
+
+    <div class="panel-grid">
+        <div class="card">
+            <h3>1. Cek Penjualan (Sisa)</h3>
+            <div class="input-group"><span>ID Voucher:</span> <input type="number" id="idCek" placeholder="Contoh: 1"></div>
+            <div class="input-group"><span>Sisa Etalase:</span> <input type="number" id="sisaCek" placeholder="0"></div>
+            <button onclick="prosesCekStok()">Update Terjual</button>
+        </div>
+
+        <div class="card">
+            <h3>2. Pindah ke Depan</h3>
+            <div class="input-group"><span>ID Voucher:</span> <input type="number" id="idPindah"></div>
+            <div class="input-group"><span>Jumlah Pindah:</span> <input type="number" id="qtyPindah"></div>
+            <button onclick="prosesPindah()" style="background: #17a2b8;">Eksekusi Pindah</button>
+        </div>
+
+        <div class="card">
+            <h3>3. Restock (Beli Baru)</h3>
+            <div class="input-group"><span>ID Voucher:</span> <input type="number" id="idRestock"></div>
+            <div class="input-group"><span>Jumlah Beli:</span> <input type="number" id="qtyRestock"></div>
+            <button onclick="prosesRestock()" style="background: #28a745;">Tambah Kamar</button>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table id="mainTable">
+            <thead>
+                <tr>
+                    <th>ID</th><th>Nama WA</th><th>Harga</th><th>Kamar</th><th>Etalase</th><th>Laku</th><th>Total</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="footer-actions">
+        <button class="btn-wa" onclick="generateReportWA()">🚀 GENERATE LAPORAN WA</button>
+        <button class="btn-add" style="width: 180px;" onclick="tambahBaru()">+ Voucher</button>
+        <button class="btn-reset" style="width: 180px;" onclick="menuResetModular()">⚙️ Menu Reset</button>
+        <button class="btn-seed" style="width: 180px;" onclick="seedDataAwal()">⚡ Auto-Seed Data</button>
+    </div>
+</div>
+
+<script>
+    // --- KONFIGURASI SUPABASE LO ---
+    const SB_URL = "https://cphgjbsdzslyyaduherc.supabase.co";
+    const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwaGdqYnNkenNseXlhZHVoZXJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMDg4MDMsImV4cCI6MjA4NTg4NDgwM30.bzoog6sHewP_VpqCg7oXS33HyeB_OYEExB5cbsAnQX8";
+    const supabase = supabase.createClient(SB_URL, SB_KEY);
+
+    // Ambil Data & Render Tabel
+    async function fetchTable() {
+        const { data, error } = await supabase.from('vouchers').select('*').order('id', { ascending: true });
+        if (error) return console.error(error);
+
+        const tbody = document.querySelector("#mainTable tbody");
+        tbody.innerHTML = "";
+        data.forEach(v => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${v.id}</td>
+                    <td style="text-align:left">${v.nama_wa}</td>
+                    <td>${v.harga_jual / 1000}k</td>
+                    <td>${v.stok_kamar}</td>
+                    <td>${v.stok_etalase}</td>
+                    <td class="terjual-text">${v.terjual}</td>
+                    <td><b>${v.stok_kamar + v.stok_etalase}</b></td>
+                </tr>
+            `;
+        });
+    }
+
+    // Fitur 1: Cek Penjualan
+    async function prosesCekStok() {
+        const id = document.getElementById('idCek').value;
+        const sisa = parseInt(document.getElementById('sisaCek').value);
+        if(!id || isNaN(sisa)) return alert("Isi ID & Sisa dulu!");
+
+        const { data } = await supabase.from('vouchers').select('stok_etalase, terjual').eq('id', id).single();
+        const laku = data.stok_etalase - sisa;
+
+        if (laku >= 0) {
+            await supabase.from('vouchers').update({ 
+                stok_etalase: sisa, 
+                terjual: data.terjual + laku 
+            }).eq('id', id);
+            alert(`Tercatat: Terjual ${laku} biji!`);
+            fetchTable();
+        } else { alert("Sisa kok lebih banyak dari stok? Cek lagi!"); }
+    }
+
+    // Fitur 2: Pindah Barang
+    async function prosesPindah() {
+        const id = document.getElementById('idPindah').value;
+        const qty = parseInt(document.getElementById('qtyPindah').value);
+        const { data } = await supabase.from('vouchers').select('stok_kamar, stok_etalase').eq('id', id).single();
+
+        if (data.stok_kamar >= qty) {
+            await supabase.from('vouchers').update({ 
+                stok_kamar: data.stok_kamar - qty,
+                stok_etalase: data.stok_etalase + qty 
+            }).eq('id', id);
+            alert("Berhasil dipindah ke depan!");
+            fetchTable();
+        } else { alert("Stok Kamar Gak Cukup!"); }
+    }
+
+    // Fitur 3: Restock
+    async function prosesRestock() {
+        const id = document.getElementById('idRestock').value;
+        const qty = parseInt(document.getElementById('qtyRestock').value);
+        const { data } = await supabase.from('vouchers').select('stok_kamar').eq('id', id).single();
+
+        await supabase.from('vouchers').update({ stok_kamar: data.stok_kamar + qty }).eq('id', id);
+        alert("Stok Kamar Berhasil Ditambah!");
+        fetchTable();
+    }
+
+    // Laporan WA & Duit Mama
+    async function generateReportWA() {
+        const { data } = await supabase.from('vouchers').select('*');
+        let totalHarusnya = 0;
+        let text = "*--- LAPORAN PENJUALAN ---*\n\n";
+
+        data.forEach(v => {
+            text += `${v.nama_wa} = ${v.stok_etalase}\n`; // Teks laporan = Sisa Etalase
+            totalHarusnya += (v.terjual * v.harga_jual);
+        });
+
+        const fisik = prompt(`Harusnya ada Rp${totalHarusnya.toLocaleString()}\nMasukkan Uang Fisik di Tangan:`);
+        if (fisik !== null) {
+            const mama = totalHarusnya - parseInt(fisik);
+            text += `\n------------------------\n`;
+            text += `Total Harusnya : Rp${totalHarusnya.toLocaleString()}\n`;
+            text += `Uang Fisik     : Rp${parseInt(fisik).toLocaleString()}\n`;
+            text += `*Duit Mama      : Rp${mama > 0 ? mama.toLocaleString() : 0}*`;
+            
+            // Auto-Copy (untuk browser modern)
+            navigator.clipboard.writeText(text);
+            alert("Laporan sudah di-copy! Tinggal paste ke WA.\n\n" + text);
+        }
+    }
+
+    // Menu Reset Modular
+    async function menuResetModular() {
+        const mode = prompt("Pilih Mode Reset:\n1. Reset 1 Baris (Pake ID)\n2. Reset SEMUA Baris");
+        const kolom = prompt("Ketik Kolom yang mau dinolin:\nterjual / stok_etalase / stok_kamar");
+        if(!mode || !kolom) return;
+
+        if (mode == "1") {
+            const id = prompt("Masukkan ID Voucher:");
+            await supabase.from('vouchers').update({ [kolom]: 0 }).eq('id', id);
+        } else if (mode == "2") {
+            if (confirm(`YAKIN nolin SEMUA data di kolom ${kolom}?`)) {
+                await supabase.from('vouchers').update({ [kolom]: 0 }).neq('id', 0);
+            }
+        }
+        fetchTable();
+    }
+
+    // Seeding Massal (Biar gak ngetik ulang 20 data)
+    async function seedDataAwal() {
+        if(!confirm("Mau masukin 20 data voucher awal secara otomatis?")) return;
+        const d = [
+            {nama_wa: "indosat 15", harga_jual: 15000, stok_kamar: 0, stok_etalase: 0},
+            {nama_wa: "axis 14", harga_jual: 14000, stok_kamar: 11, stok_etalase: 4},
+            {nama_wa: "axis 18", harga_jual: 18000, stok_kamar: 5, stok_etalase: 3},
+            {nama_wa: "axis 30", harga_jual: 30000, stok_kamar: 2, stok_etalase: 1},
+            {nama_wa: "axis 50", harga_jual: 50000, stok_kamar: 0, stok_etalase: 1},
+            {nama_wa: "XL 15", harga_jual: 15000, stok_kamar: 3, stok_etalase: 5},
+            {nama_wa: "XL 50", harga_jual: 50000, stok_kamar: 2, stok_etalase: 1},
+            {nama_wa: "XL 70", harga_jual: 70000, stok_kamar: 0, stok_etalase: 1},
+            {nama_wa: "Tri 14", harga_jual: 14000, stok_kamar: 3, stok_etalase: 3},
+            {nama_wa: "Tri 18", harga_jual: 18000, stok_kamar: 0, stok_etalase: 0},
+            {nama_wa: "Smart 8", harga_jual: 8000, stok_kamar: 0, stok_etalase: 2},
+            {nama_wa: "Smart 14", harga_jual: 14000, stok_kamar: 0, stok_etalase: 2},
+            {nama_wa: "Smart 30", harga_jual: 30000, stok_kamar: 1, stok_etalase: 1},
+            {nama_wa: "Smart 77", harga_jual: 77000, stok_kamar: 1, stok_etalase: 1},
+            {nama_wa: "Smart 95", harga_jual: 95000, stok_kamar: 1, stok_etalase: 1},
+            {nama_wa: "Telkom 10", harga_jual: 10000, stok_kamar: 0, stok_etalase: 2},
+            {nama_wa: "Telkom 13", harga_jual: 13000, stok_kamar: 0, stok_etalase: 3},
+            {nama_wa: "Telkom 20", harga_jual: 20000, stok_kamar: 0, stok_etalase: 0}
+        ];
+        const { error } = await supabase.from('vouchers').insert(d);
+        if (error) alert("Error: " + error.message);
+        else { alert("Gokil! Data awal masuk semua."); fetchTable(); }
+    }
+
+    async function tambahBaru() {
+        const nW = prompt("Nama Laporan (axis 14):");
+        const h = prompt("Harga Jual (angka):");
+        if(nW && h) {
+            await supabase.from('vouchers').insert([{ nama_wa: nW, harga_jual: parseInt(h), stok_kamar: 0, stok_etalase: 0 }]);
+            fetchTable();
+        }
+    }
+
+    fetchTable();
+</script>
+
+</body>
+</html>
