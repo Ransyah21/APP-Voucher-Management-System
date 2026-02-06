@@ -7,282 +7,276 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- THEMING ENGINE (CSS Variables) --- */
         :root {
-            /* Light Mode Defaults */
-            --bg-body: #f1f5f9;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
-            --table-head-bg: #f8fafc;
-            --table-hover: #f1f5f9;
-            --input-bg: #ffffff;
-            --logo-color: #334155; /* Warna logo di mode terang (abu tua/hitam) */
-            
-            /* Brand Colors (Tetap sama di kedua mode) */
-            --primary: #2563eb; --primary-hover: #1d4ed8;
-            --success: #10b981; --info: #0ea5e9;
-            --danger: #ef4444; --purple: #8b5cf6;
-            --wa-color: #25D366;
+            --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
+            --border: #e2e8f0; --primary: #2563eb; --success: #10b981;
+            --danger: #ef4444; --info: #0ea5e9; --logo: #1e293b;
+            --modal-overlay: rgba(0, 0, 0, 0.5);
         }
 
-        /* Dark Mode Overrides */
         [data-theme="dark"] {
-            --bg-body: #0f172a;
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --card-bg: #1e293b;
-            --border-color: #334155;
-            --table-head-bg: #1e293b;
-            --table-hover: #334155;
-            --input-bg: #0f172a;
-            --logo-color: #e2e8f0; /* Warna logo di mode gelap (putih/abu terang) */
+            --bg: #020617; --card: #1e293b; --text: #f1f5f9; --muted: #94a3b8;
+            --border: #334155; --logo: #f1f5f9; --modal-overlay: rgba(0, 0, 0, 0.8);
         }
 
-        /* --- BASE STYLES --- */
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; transition: background-color 0.3s, color 0.3s; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; margin: 0; padding: 20px; }
         .container { max-width: 1200px; margin: auto; }
-        button { cursor: pointer; transition: 0.2s; }
 
-        /* --- HEADER & LOGO --- */
-        .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .brand-wrapper { display: flex; align-items: center; gap: 12px; }
-        /* Logo SVG Profesional */
-        .brand-logo svg { width: 32px; height: 32px; fill: var(--logo-color); transition: fill 0.3s; }
-        .brand-text h1 { font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
-        .brand-text p { font-size: 13px; color: var(--text-muted); margin: 2px 0 0 0; }
-        
-        /* Theme Toggle Button */
-        .theme-toggle-btn { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 8px; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-        .theme-toggle-btn:hover { background: var(--border-color); }
+        /* HEADER & LOGO */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand svg { width: 35px; height: 35px; fill: var(--logo); }
+        .brand h1 { font-size: 22px; margin: 0; font-weight: 700; letter-spacing: -0.5px; }
+        .theme-toggle { background: var(--card); border: 1px solid var(--border); padding: 10px; border-radius: 12px; cursor: pointer; color: var(--text); font-size: 18px; }
 
-        /* --- CARDS & INPUTS --- */
-        .panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .card { background: var(--card-bg); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid var(--border-color); }
-        .card h3 { margin-top: 0; font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        
-        .input-row { display: flex; gap: 12px; margin-bottom: 15px; }
-        .input-group { flex: 1; }
-        .input-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
-        input { width: 100%; padding: 10px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; font-size: 14px; box-sizing: border-box; transition: 0.2s; }
-        input:focus { outline: none; border-color: var(--primary); }
+        /* DASHBOARD GRID */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .card h3 { font-size: 15px; margin-top: 0; margin-bottom: 20px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+        input, select { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 10px; box-sizing: border-box; font-size: 14px; outline: none; }
+        input:focus { border-color: var(--primary); }
 
-        /* --- ACTION BUTTONS IN CARDS --- */
-        .card-btn { width: 100%; padding: 10px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; color: white; }
-        .btn-c-primary { background: var(--primary); } .btn-c-primary:hover { background: var(--primary-hover); }
-        .btn-c-info { background: var(--info); } .btn-c-info:hover { filter: brightness(90%); }
-        .btn-c-success { background: var(--success); } .btn-c-success:hover { filter: brightness(90%); }
+        button.action { width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; color: white; font-size: 14px; }
+        .btn-p { background: var(--primary); } .btn-i { background: var(--info); } .btn-s { background: var(--success); }
+        button:active { transform: scale(0.98); }
 
-        /* --- MODERN TABLE --- */
-        .table-wrapper { background: var(--card-bg); border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid var(--border-color); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
-        th { background: var(--table-head-bg); padding: 15px; text-align: center; font-size: 12px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; }
-        td { padding: 15px; border-bottom: 1px solid var(--border-color); text-align: center; font-size: 14px; }
-        tr:hover { background-color: var(--table-hover); }
-        .badge-laku { background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 4px 8px; border-radius: 6px; font-weight: 700; }
-        .stok-total { font-weight: 700; }
+        /* TABLE SECTION */
+        .table-box { background: var(--card); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--bg); padding: 15px; font-size: 12px; color: var(--muted); text-transform: uppercase; text-align: center; }
+        td { padding: 16px; border-bottom: 1px solid var(--border); font-size: 14px; text-align: center; }
+        .badge { background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 4px 10px; border-radius: 8px; font-weight: 700; }
 
-        /* --- FOOTER MENU --- */
-        .footer-menu { margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; padding-bottom: 30px; }
-        .f-btn { padding: 12px 20px; border-radius: 10px; border: none; font-weight: 600; font-size: 14px; color: white; display: flex; align-items: center; gap: 8px; }
-        .btn-wa-large { background: var(--wa-color); flex-grow: 2; justify-content: center; min-width: 280px; font-size: 15px; }
-        .btn-secondary { background: var(--text-muted); flex-grow: 1; }
-        .btn-danger { background: var(--danger); flex-grow: 1; }
-        .btn-purple { background: var(--purple); flex-grow: 1; }
+        /* CUSTOM MODAL SYSTEM (JAVA STYLE) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-overlay); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--card); padding: 30px; border-radius: 24px; width: 90%; max-width: 450px; border: 1px solid var(--border); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); position: relative; }
+        .modal-content h2 { margin-top: 0; font-size: 20px; margin-bottom: 10px; }
+        .modal-content p { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+        .modal-footer { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-modal { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; }
+        .btn-cancel { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+        .btn-confirm { background: var(--primary); color: white; }
+
+        /* FOOTER */
+        .footer { margin-top: 40px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding-bottom: 40px; }
+        .btn-wa { background: #25D366; width: 340px; }
+        .btn-res { background: var(--danger); width: 180px; }
+        .btn-seed { background: #8b5cf6; width: 180px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header-container">
-        <div class="brand-wrapper">
-            <div class="brand-logo">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 5C4 3.34315 5.34315 2 7 2H17C18.6569 2 20 3.34315 20 5V19C20 20.6569 18.6569 22 17 22H7C5.34315 22 4 20.6569 4 19V5ZM7 4C6.44772 4 6 4.44772 6 5V19C6 19.5523 6.44772 20 7 20H17C17.5523 20 18 19.5523 18 19V5C18 4.44772 17.5523 4 17 4H7ZM13 8C13 7.44772 13.4477 7 14 7H16C16.5523 7 17 7.44772 17 8C17 8.55228 16.5523 9 16 9H14C13.4477 9 13 8.55228 13 8ZM13 12C13 11.4477 13.4477 11 14 11H16C16.5523 11 17 11.4477 17 12C17 12.5523 16.5523 13 16 13H14C13.4477 13 13 12.5523 13 12ZM13 16C13 15.4477 13.4477 15 14 15H16C16.5523 15 17 15.4477 17 16C17 16.5523 16.5523 17 16 17H14C13.4477 17 13 16.5523 13 16Z"></path></svg>
-            </div>
-            <div class="brand-text">
-                <h1>Voucher Systems Pro</h1>
-                <p>Stock & Sales Dashboard</p>
-            </div>
+    <header class="header">
+        <div class="brand">
+            <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+            <h1>Voucher Systems Pro</h1>
         </div>
-        <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌞</button>
-    </div>
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeIcon">🌞</button>
+    </header>
 
-    <div class="panel-grid">
+    <div class="grid">
         <div class="card">
-            <h3>📊 Cek Penjualan</h3>
+            <h3>📊 Update Penjualan</h3>
             <div class="input-row">
-                <div class="input-group"><label>ID VOUCHER</label><input type="number" id="idCek" placeholder="ID"></div>
-                <div class="input-group"><label>SISA ETALASE</label><input type="number" id="sisaCek" placeholder="0"></div>
+                <div><label>ID VOUCHER</label><input type="number" id="idC"></div>
+                <div><label>SISA ETALASE</label><input type="number" id="sisC"></div>
             </div>
-            <button class="card-btn btn-c-primary" onclick="prosesCekStok()">Update Penjualan</button>
+            <button class="action btn-p" onclick="doCek()">Update Stok</button>
         </div>
         <div class="card">
-            <h3>🚚 Pindah Stok</h3>
+            <h3>🚚 Pindah Barang</h3>
             <div class="input-row">
-                <div class="input-group"><label>ID VOUCHER</label><input type="number" id="idPindah" placeholder="ID"></div>
-                <div class="input-group"><label>QTY PINDAH</label><input type="number" id="qtyPindah" placeholder="Jml"></div>
+                <div><label>ID VOUCHER</label><input type="number" id="idP"></div>
+                <div><label>QTY PINDAH</label><input type="number" id="qtyP"></div>
             </div>
-            <button class="card-btn btn-c-info" onclick="prosesPindah()">Eksekusi Pindah</button>
+            <button class="action btn-i" onclick="doMove()">Eksekusi Pindah</button>
         </div>
         <div class="card">
             <h3>📦 Restock Kamar</h3>
             <div class="input-row">
-                <div class="input-group"><label>ID VOUCHER</label><input type="number" id="idRestock" placeholder="ID"></div>
-                <div class="input-group"><label>QTY BELI</label><input type="number" id="qtyRestock" placeholder="Jml"></div>
+                <div><label>ID VOUCHER</label><input type="number" id="idR"></div>
+                <div><label>JUMLAH BELI</label><input type="number" id="qtyR"></div>
             </div>
-            <button class="card-btn btn-c-success" onclick="prosesRestock()">Tambah Stok</button>
+            <button class="action btn-s" onclick="doRestock()">Simpan ke Kamar</button>
         </div>
     </div>
 
-    <div class="table-wrapper">
-        <table id="mainTable">
+    <div class="table-box">
+        <table id="vTable">
             <thead>
-                <tr>
-                    <th>ID</th><th>Nama Voucher</th><th>Harga</th><th>Kamar</th><th>Etalase</th><th>Laku</th><th>Total</th>
-                </tr>
+                <tr><th>ID</th><th>Nama Voucher</th><th>Harga</th><th>Kamar</th><th>Etalase</th><th>Laku</th><th>Total</th></tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
 
-    <div class="footer-menu">
-        <button class="f-btn btn-wa-large" onclick="generateReportWA()">🚀 GENERATE & COPY LAPORAN WA</button>
-        <button class="f-btn btn-secondary" onclick="tambahBaru()">+ Data Baru</button>
-        <button class="f-btn btn-danger" onclick="menuResetModular()">⚙️ Reset Menu</button>
-        <button class="f-btn btn-purple" onclick="seedDataAwal()">⚡ Auto-Seed</button>
+    <div class="footer">
+        <button class="action btn-wa" onclick="getWA()">🚀 GENERATE & COPY LAPORAN WA</button>
+        <button class="action btn-res" onclick="openResetModal()">⚙️ Menu Reset</button>
+        <button class="action btn-seed" onclick="openSeedModal()">⚡ Auto-Seed Excel</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalReset">
+    <div class="modal-content">
+        <h2>Menu Reset Data</h2>
+        <p>Pilih tipe reset dan kolom yang ingin dinolin.</p>
+        <label>Tipe Reset</label>
+        <select id="resetType" onchange="toggleResetID()">
+            <option value="all">Semua Baris</option>
+            <option value="single">Satu Baris (Pake ID)</option>
+        </select>
+        <div id="idResetBox" style="display:none; margin-top:15px;">
+            <label>Masukkan ID Voucher</label>
+            <input type="number" id="resetIDInput" placeholder="Contoh: 1">
+        </div>
+        <div style="margin-top:15px;">
+            <label>Pilih Kolom</label>
+            <select id="resetCol">
+                <option value="terjual">Kolom Terjual</option>
+                <option value="stok_etalase">Kolom Etalase</option>
+                <option value="stok_kamar">Kolom Kamar (Modal)</option>
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-modal btn-cancel" onclick="closeModal('modalReset')">Batal</button>
+            <button class="btn-modal btn-confirm" onclick="doReset()">Reset Sekarang</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalReport">
+    <div class="modal-content">
+        <h2 id="repTitle">Laporan Penjualan</h2>
+        <textarea id="repText" style="width:100%; height:200px; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px; font-family:monospace; font-size:12px;"></textarea>
+        <div class="modal-footer">
+            <button class="btn-modal btn-confirm" onclick="copyAndClose()">Copy & Tutup</button>
+        </div>
     </div>
 </div>
 
 <script>
-    // --- KREDENSIAL SUPABASE LO ---
+    // --- KREDENSIAL SUPABASE ---
     const SB_URL = "https://cphgjbsdzslyyaduherc.supabase.co";
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwaGdqYnNkenNseXlhZHVoZXJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMDg4MDMsImV4cCI6MjA4NTg4NDgwM30.bzoog6sHewP_VpqCg7oXS33HyeB_OYEExB5cbsAnQX8";
-    const supabase = supabase.createClient(SB_URL, SB_KEY);
+    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-    // --- LOGIKA DARK/LIGHT MODE ---
-    const themeBtn = document.getElementById('themeBtn');
-    const htmlElement = document.documentElement;
-
-    // Cek local storage pas loading
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    htmlElement.setAttribute('data-theme', currentTheme);
-    themeBtn.innerText = currentTheme === 'dark' ? '🌜' : '🌞';
-
+    // 1. TEMA LOGIC
     function toggleTheme() {
-        const newTheme = htmlElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        htmlElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        themeBtn.innerText = newTheme === 'dark' ? '🌜' : '🌞';
+        const h = document.documentElement;
+        const cur = h.getAttribute('data-theme');
+        const nxt = cur === 'light' ? 'dark' : 'light';
+        h.setAttribute('data-theme', nxt);
+        document.getElementById('themeIcon').innerText = nxt === 'light' ? '🌞' : '🌜';
+        localStorage.setItem('theme', nxt);
+    }
+    // Load theme saved
+    if(localStorage.getItem('theme')) document.documentElement.setAttribute('data-theme', localStorage.getItem('theme'));
+
+    // 2. MODAL CONTROLS
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function toggleResetID() {
+        const type = document.getElementById('resetType').value;
+        document.getElementById('idResetBox').style.display = type === 'single' ? 'block' : 'none';
     }
 
-    // --- LOGIKA APLIKASI (Sama seperti sebelumnya) ---
-    async function fetchTable() {
-        const { data, error } = await supabase.from('vouchers').select('*').order('id', { ascending: true });
-        if (error) { console.error(error); return; }
-        const tbody = document.querySelector("#mainTable tbody");
-        tbody.innerHTML = "";
+    // 3. CORE LOGIC
+    async function refresh() {
+        const { data, error } = await supabaseClient.from('vouchers').select('*').order('id', { ascending: true });
+        if (error) return;
+        const b = document.querySelector('#vTable tbody'); b.innerHTML = '';
         data.forEach(v => {
-            tbody.innerHTML += `
-                <tr>
-                    <td style="font-weight:600; color:var(--text-muted)">#${v.id}</td>
-                    <td style="text-align:left; font-weight:600;">${v.nama_wa}</td>
-                    <td>Rp${v.harga_jual.toLocaleString()}</td>
-                    <td>${v.stok_kamar}</td>
-                    <td>${v.stok_etalase}</td>
-                    <td><span class="badge-laku">${v.terjual}</span></td>
-                    <td><span class="stok-total">${v.stok_kamar + v.stok_etalase}</span></td>
-                </tr>
-            `;
+            b.innerHTML += `<tr><td>#${v.id}</td><td style="text-align:left; font-weight:700">${v.nama_wa}</td><td>Rp${v.harga_jual.toLocaleString()}</td><td>${v.stok_kamar}</td><td>${v.stok_etalase}</td><td><span class="badge">${v.terjual}</span></td><td style="font-weight:700; color:var(--primary)">${v.stok_kamar + v.stok_etalase}</td></tr>`;
         });
     }
 
-    async function prosesCekStok() {
-        const id = document.getElementById('idCek').value;
-        const sisa = parseInt(document.getElementById('sisaCek').value);
-        if (!id || isNaN(sisa)) return alert("Input tidak valid!");
-        const { data, error } = await supabase.from('vouchers').select('stok_etalase, terjual').eq('id', id).single();
-        if (error || !data) return alert("ID Salah!");
-        const laku = data.stok_etalase - sisa;
-        if (laku >= 0) {
-            await supabase.from('vouchers').update({ stok_etalase: sisa, terjual: data.terjual + laku }).eq('id', id);
-            fetchTable(); alert(`Sip! Terjual ${laku} pcs.`);
-        } else { alert("Sisa gak masuk akal!"); }
+    async function doCek() {
+        const id = document.getElementById('idC').value;
+        const s = parseInt(document.getElementById('sisC').value);
+        const { data } = await supabaseClient.from('vouchers').select('stok_etalase, terjual').eq('id', id).single();
+        if (data && (data.stok_etalase - s >= 0)) {
+            await supabaseClient.from('vouchers').update({ stok_etalase: s, terjual: data.terjual + (data.stok_etalase - s) }).eq('id', id);
+            refresh(); showToast("Stok Terupdate!");
+        } else alert("Cek ID/Sisa!");
     }
 
-    async function prosesPindah() {
-        const id = document.getElementById('idPindah').value;
-        const qty = parseInt(document.getElementById('qtyPindah').value);
-        if (!id || isNaN(qty)) return alert("Input tidak valid!");
-        const { data, error } = await supabase.from('vouchers').select('stok_kamar, stok_etalase').eq('id', id).single();
-        if (error || !data) return alert("ID Salah!");
-        if (data.stok_kamar >= qty) {
-            await supabase.from('vouchers').update({ stok_kamar: data.stok_kamar - qty, stok_etalase: data.stok_etalase + qty }).eq('id', id);
-            fetchTable(); alert("Berhasil dipindah!");
-        } else { alert("Stok Kamar kurang!"); }
-    }
-
-    async function prosesRestock() {
-        const id = document.getElementById('idRestock').value;
-        const qty = parseInt(document.getElementById('qtyRestock').value);
-        if (!id || isNaN(qty)) return alert("Input tidak valid!");
-        const { data, error } = await supabase.from('vouchers').select('stok_kamar').eq('id', id).single();
-        if (error || !data) return alert("ID Salah!");
-        await supabase.from('vouchers').update({ stok_kamar: data.stok_kamar + qty }).eq('id', id);
-        fetchTable(); alert("Stok Kamar ditambah!");
-    }
-
-    async function generateReportWA() {
-        const { data } = await supabase.from('vouchers').select('*');
-        let totalCash = 0;
-        let text = "*DAILY VOUCHER REPORT*\n------------------\n";
-        data.forEach(v => {
-            text += `• ${v.nama_wa}: sisa *${v.stok_etalase}*\n`;
-            totalCash += (v.terjual * v.harga_jual);
-        });
-        const fisik = prompt(`Total Sistem: Rp${totalCash.toLocaleString()}\nInput Uang Fisik:`);
-        if (fisik !== null) {
-            const mama = totalCash - parseInt(fisik.replace(/\D/g,'') || 0);
-            text += `\n------------------\n`;
-            text += `💰 Target: Rp${totalCash.toLocaleString()}\n`;
-            text += `💵 Fisik : Rp${parseInt(fisik).toLocaleString()}\n`;
-            text += `🚨 *Selisih/Mama: Rp${mama.toLocaleString()}*`;
-            navigator.clipboard.writeText(text);
-            alert("Laporan di-copy! Siap paste ke WA.");
+    async function doMove() {
+        const id = document.getElementById('idP').value;
+        const q = parseInt(document.getElementById('qtyP').value);
+        const { data } = await supabaseClient.from('vouchers').select('stok_kamar, stok_etalase').eq('id', id).single();
+        if (data && data.stok_kamar >= q) {
+            await supabaseClient.from('vouchers').update({ stok_kamar: data.stok_kamar - q, stok_etalase: data.stok_etalase + q }).eq('id', id);
+            refresh(); showToast("Pindah Berhasil!");
         }
     }
 
-    async function menuResetModular() {
-        const mode = prompt("Reset Mode:\n1. Satu ID\n2. SEMUA Data");
-        const kolom = prompt("Kolom (terjual / stok_etalase / stok_kamar):");
-        if (!mode || !kolom) return;
-        if (mode == "1") {
-            const id = prompt("Masukkan ID:");
-            if(id) await supabase.from('vouchers').update({ [kolom]: 0 }).eq('id', id);
-        } else if (mode == "2") {
-            if (confirm(`YAKIN reset SEMUA ${kolom}?`)) await supabase.from('vouchers').update({ [kolom]: 0 }).neq('id', 0);
+    async function doRestock() {
+        const id = document.getElementById('idR').value;
+        const q = parseInt(document.getElementById('qtyR').value);
+        const { data } = await supabaseClient.from('vouchers').select('stok_kamar').eq('id', id).single();
+        if (data) {
+            await supabaseClient.from('vouchers').update({ stok_kamar: data.stok_kamar + q }).eq('id', id);
+            refresh(); showToast("Restock Berhasil!");
         }
-        fetchTable();
     }
 
-    async function seedDataAwal() {
-        if(!confirm("Isi 20 data awal otomatis?")) return;
+    async function getWA() {
+        const { data } = await supabaseClient.from('vouchers').select('*');
+        let total = 0; let rep = "*LAPORAN STOK HARIAN*\n\n";
+        data.forEach(v => { rep += `• ${v.nama_wa} = sisa *${v.stok_etalase}*\n`; total += (v.terjual * v.harga_jual); });
+        
+        const f = prompt(`Sistem: Rp${total.toLocaleString()}\nMasukkan Uang Fisik:`);
+        if (f !== null) {
+            const m = total - parseInt(f.replace(/\D/g,'') || 0);
+            rep += `\n------------------\n💰 *Total:* Rp${total.toLocaleString()}\n💵 *Fisik:* Rp${parseInt(f).toLocaleString()}\n🚨 *Mama:* Rp${m.toLocaleString()}`;
+            document.getElementById('repText').value = rep;
+            openModal('modalReport');
+        }
+    }
+
+    function openResetModal() { openModal('modalReset'); }
+
+    async function doReset() {
+        const type = document.getElementById('resetType').value;
+        const col = document.getElementById('resetCol').value;
+        if (type === 'all') {
+            if(confirm("Yakin reset SEMUA baris?")) await supabaseClient.from('vouchers').update({ [col]: 0 }).neq('id', 0);
+        } else {
+            const id = document.getElementById('resetIDInput').value;
+            await supabaseClient.from('vouchers').update({ [col]: 0 }).eq('id', id);
+        }
+        closeModal('modalReset'); refresh();
+    }
+
+    function copyAndClose() {
+        const t = document.getElementById('repText');
+        t.select(); navigator.clipboard.writeText(t.value);
+        closeModal('modalReport'); showToast("Laporan dicopy!");
+    }
+
+    function showToast(m) { alert(m); } // Bisa diganti toast beneran nanti
+
+    function openSeedModal() { if(confirm("Isi data awal?")) seedNow(); }
+    async function seedNow() {
         const d = [
-            {nama_wa: "indosat 15", harga_jual: 15000}, {nama_wa: "axis 14", harga_jual: 14000, stok_kamar: 11, stok_etalase: 4}, {nama_wa: "axis 18", harga_jual: 18000, stok_kamar: 5, stok_etalase: 3}, {nama_wa: "axis 30", harga_jual: 30000, stok_kamar: 2, stok_etalase: 1}, {nama_wa: "axis 50", harga_jual: 50000, stok_etalase: 1},
-            {nama_wa: "XL 15", harga_jual: 15000, stok_kamar: 3, stok_etalase: 5}, {nama_wa: "XL 50", harga_jual: 50000, stok_kamar: 2, stok_etalase: 1}, {nama_wa: "XL 70", harga_jual: 70000, stok_etalase: 1},
-            {nama_wa: "Tri 14", harga_jual: 14000, stok_kamar: 3, stok_etalase: 3}, {nama_wa: "Tri 18", harga_jual: 18000}, {nama_wa: "Tri AON 6", harga_jual: 33000}, {nama_wa: "Tri AON 9", harga_jual: 50000},
-            {nama_wa: "Smart 8", harga_jual: 8000, stok_etalase: 2}, {nama_wa: "Smart 14", harga_jual: 14000, stok_etalase: 2}, {nama_wa: "Smart 30", harga_jual: 30000, stok_kamar: 1, stok_etalase: 1}, {nama_wa: "Smart 77", harga_jual: 77000, stok_kamar: 1, stok_etalase: 1}, {nama_wa: "Smart 95", harga_jual: 95000, stok_kamar: 1, stok_etalase: 1},
-            {nama_wa: "Telkom 10", harga_jual: 10000, stok_etalase: 2}, {nama_wa: "Telkom 13", harga_jual: 13000, stok_etalase: 3}, {nama_wa: "Telkom 20", harga_jual: 20000}
+            {nama_wa: "indosat 15", harga_jual: 15000}, {nama_wa: "axis 14", harga_jual: 14000, stok_kamar: 11, stok_etalase: 4},
+            {nama_wa: "axis 18", harga_jual: 18000, stok_kamar: 5, stok_etalase: 3}, {nama_wa: "axis 30", harga_jual: 30000, stok_kamar: 2, stok_etalase: 1},
+            {nama_wa: "axis 50", harga_jual: 50000, stok_etalase: 1}, {nama_wa: "XL 15", harga_jual: 15000, stok_kamar: 3, stok_etalase: 5},
+            {nama_wa: "XL 50", harga_jual: 50000, stok_kamar: 2, stok_etalase: 1}, {nama_wa: "XL 70", harga_jual: 70000, stok_etalase: 1},
+            {nama_wa: "Tri 14", harga_jual: 14000, stok_kamar: 3, stok_etalase: 3}, {nama_wa: "Tri 18", harga_jual: 18000},
+            {nama_wa: "Smart 8", harga_jual: 8000, stok_etalase: 2}, {nama_wa: "Smart 14", harga_jual: 14000, stok_etalase: 2},
+            {nama_wa: "Smart 30", harga_jual: 30000, stok_kamar: 1, stok_etalase: 1}, {nama_wa: "Smart 77", harga_jual: 77000, stok_kamar: 1, stok_etalase: 1},
+            {nama_wa: "Smart 95", harga_jual: 95000, stok_kamar: 1, stok_etalase: 1}, {nama_wa: "Telkom 10", harga_jual: 10000, stok_etalase: 2},
+            {nama_wa: "Telkom 13", harga_jual: 13000, stok_etalase: 3}, {nama_wa: "Telkom 20", harga_jual: 20000}
         ];
-        await supabase.from('vouchers').insert(d); fetchTable(); alert("Seeding Selesai!");
+        await supabaseClient.from('vouchers').insert(d); refresh();
     }
 
-    async function tambahBaru() {
-        const nW = prompt("Nama Voucher:"); const h = prompt("Harga Jual:");
-        if (nW && h) { await supabase.from('vouchers').insert([{ nama_wa: nW, harga_jual: parseInt(h) }]); fetchTable(); }
-    }
-
-    fetchTable();
+    refresh();
 </script>
 </body>
 </html>
