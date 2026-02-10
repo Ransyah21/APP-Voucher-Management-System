@@ -339,23 +339,23 @@
     let myChart = null;
 
     // --- BIOMETRIC AUTH ---
-    // --- BIOMETRIC AUTH REAL (WebAuthn) ---
-// --- BIOMETRIC LOGIC (OVO/SeaBank Style) ---
+// --- HELPER BIAR ID GAK ILANG (Base64 Converter) ---
+const bufferEncode = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+const bufferDecode = (str) => Uint8Array.from(atob(str.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0));
+
 async function tryBiometric() {
     if (!window.PublicKeyCredential) return alert("HP lu gak support, cuy!");
 
-    // Cek apakah sudah pernah daftar sidik jari di HP ini
-    const hasRegistered = localStorage.getItem('vms_fingerprint_id');
+    const savedId = localStorage.getItem('vms_finger_id');
 
-    if (!hasRegistered) {
-        // TAHAP 1: REGISTRASI (Cuma sekali seumur hidup)
-        if (confirm("Sidik jari belum terdaftar. Daftarkan jari lu sekarang, boss?")) {
+    // Kalau belum pernah daftar, paksa daftar dulu
+    if (!savedId) {
+        if (confirm("Sidik jari belum terdaftar di sistem. Daftar sekarang?")) {
             await registerBiometric();
         }
         return;
     }
 
-    // TAHAP 2: LOGIN (Kalau sudah pernah daftar)
     try {
         const challenge = new Uint8Array(32);
         window.crypto.getRandomValues(challenge);
@@ -364,22 +364,32 @@ async function tryBiometric() {
             publicKey: {
                 challenge: challenge,
                 rpId: window.location.hostname,
-                userVerification: "required"
+                userVerification: "required",
+                // INI KUNCINYA: Ngasih tau browser ID mana yang mau dipake
+                allowCredentials: [{
+                    id: bufferDecode(savedId),
+                    type: 'public-key'
+                }]
             }
         });
 
         if (auth) {
             document.getElementById('pinScreen').style.display = "none";
             refresh();
-            console.log("Login Berhasil!");
+            console.log("Login Berhasil, Boss!");
         }
     } catch (err) {
         console.error(err);
-        alert("Gagal Login. Jari lu bersih gak? Atau pake PIN aja!");
+        // Kalau error karena ID gak cocok, hapus aja biar bisa daftar ulang
+        if(err.name === "NotAllowedError") {
+            alert("Sidik jari gak dikenal atau dibatalkan!");
+        } else {
+            localStorage.removeItem('vms_finger_id');
+            alert("Kunci bermasalah, silakan daftar ulang!");
+        }
     }
 }
 
-// Fungsi buat daftarin sidik jari pertama kali
 async function registerBiometric() {
     try {
         const challenge = new Uint8Array(32);
@@ -393,22 +403,24 @@ async function registerBiometric() {
                 rp: { name: "VMS Pro Master", id: window.location.hostname },
                 user: {
                     id: userID,
-                    name: "Admin VMS",
-                    displayName: "Boss Besar"
+                    name: "Admin-VMS",
+                    displayName: "Admin VMS"
                 },
-                pubKeyCredParams: [{ alg: -7, type: "public-key" }], // ES256
+                pubKeyCredParams: [{ alg: -7, type: "public-key" }],
                 authenticatorSelection: { authenticatorAttachment: "platform" },
                 timeout: 60000
             }
         });
 
         if (credential) {
-            localStorage.setItem('vms_fingerprint_id', credential.id);
-            alert("MANTAP! Sidik jari berhasil didaftarin. Sekarang coba klik lagi buat LOGIN.");
+            // Simpan ID dalam bentuk string biar gak ilang pas refresh
+            const idString = bufferEncode(credential.rawId);
+            localStorage.setItem('vms_finger_id', idString);
+            alert("MANTAP! Jari lu udah terdaftar. Sekarang klik lagi buat masuk!");
         }
     } catch (err) {
         console.error(err);
-        alert("Gagal daftar sidik jari. Pastikan HP lu ada kunci layar (Pattern/PIN)!");
+        alert("Gagal daftar. Pastikan HP lu pake kunci layar (PIN/Pola)!");
     }
 }
 
