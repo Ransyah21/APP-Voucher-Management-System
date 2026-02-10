@@ -93,9 +93,69 @@
         .proof-table td { background: var(--bg); padding: 14px; font-size: 13px; border-bottom: 1px solid var(--border); font-weight: 700; }
 
         /* Fingerprint Icon */
-        .finger-btn { background: none; border: 2.5px solid var(--primary); border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; font-size: 35px; cursor: pointer; margin: 20px auto; transition: 0.3s; color: var(--primary); }
-        .finger-btn:hover { background: var(--primary); color: white; }
-    </style>
+.finger-container {
+    margin: 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.finger-btn-pro {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    background: rgba(37, 99, 235, 0.05);
+    border: 2px solid rgba(37, 99, 235, 0.3);
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    cursor: pointer;
+    overflow: hidden; /* Biar garis scan gak keluar box */
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.finger-btn-pro svg {
+    width: 50px;
+    height: 50px;
+    z-index: 2;
+    filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.5));
+}
+
+/* Animasi garis laser scan */
+.scan-line {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to bottom, transparent, rgba(37, 99, 235, 0.4), transparent);
+    z-index: 1;
+    animation: scanning 3s linear infinite;
+}
+
+@keyframes scanning {
+    0% { top: -100%; }
+    50% { top: 100%; }
+    100% { top: -100%; }
+}
+
+.finger-btn-pro:hover {
+    background: rgba(37, 99, 235, 0.15);
+    border-color: var(--primary);
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(37, 99, 235, 0.2);
+}
+
+.tap-text {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+}    </style>
 </head>
 <body>
 
@@ -106,7 +166,18 @@
         <p style="color: var(--muted); font-size: 13px; margin-bottom: 25px;">Masukkan PIN atau Sidik Jari</p>
         <input type="password" id="pinInput" maxlength="4" inputmode="numeric" placeholder="****" style="text-align: center; font-size: 24px; letter-spacing: 15px;">
         
-        <button class="finger-btn" onclick="tryBiometric()">☝️</button>
+        <div class="finger-container">
+    <button class="finger-btn-pro" onclick="tryBiometric()">
+        <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M256,16C123.45,16,16,123.45,16,256S123.45,496,256,496s240-107.45,240-240S388.55,16,256,16ZM256,464C141.12,464,48,370.88,48,256S141.12,48,256,48s208,93.12,208,208S370.88,464,256,464Z" fill="currentColor" opacity="0.2"/>
+            <path d="M256,80c-97.05,0-176,78.95-176,176s78.95,176,176,176,176-78.95,176-176S353.05,80,256,80Zm0,320c-79.4,0-144-64.6-144-144S176.6,112,256,112s144,64.6,144,144S335.4,400,256,400Z" fill="currentColor" opacity="0.3"/>
+            <path d="M256,144c-61.75,0-112,50.25-112,112s50.25,112,112,112,112-50.25,112-112S317.75,144,256,144Zm0,192c-44.1,0-80-35.9-80-80s35.9-80,80-80,80,35.9,80,80S300.1,336,256,336Z" fill="currentColor" opacity="0.5"/>
+            <path d="M256,208c-26.45,0-48,21.55-48,48s21.55,48,48,48,48-21.55,48-48S282.45,208,256,208Zm0,64c-8.85,0-16-7.15-16-16s7.15-16,16-16,16,7.15,16,16S264.85,272,256,272Z" fill="currentColor"/>
+        </svg>
+        <div class="scan-line"></div>
+    </button>
+    <span class="tap-text">TAP SENSOR JEMPOL</span>
+</div>
 
         <button class="action btn-p" style="margin-top: 10px;" onclick="checkPIN()">BUKA DASHBOARD</button>
     </div>
@@ -268,22 +339,48 @@
     let myChart = null;
 
     // --- BIOMETRIC AUTH ---
-    async function tryBiometric() {
-        if (!window.PublicKeyCredential) return alert("HP lu jadul cuy, gak support sidik jari!");
-        
-        try {
-            // Karena ini web, kita butuh trigger konfirmasi user biar sensornya aktif
-            if (confirm("Gunakan sidik jari untuk login?")) {
-                // Di dunia nyata ini butuh handshake ke server, 
-                // tapi buat aplikasi warung kita permudah alurnya.
-                document.getElementById('pinScreen').style.display = "none";
-                refresh();
-                alert("Login Berhasil, Boss!");
-            }
-        } catch (e) {
-            alert("Gagal pake sidik jari, pake PIN aja!");
-        }
+    // --- BIOMETRIC AUTH REAL (WebAuthn) ---
+async function tryBiometric() {
+    // 1. Cek apakah device & browser support
+    if (!window.PublicKeyCredential) {
+        return alert("HP/Browser lu gak support biometric API, cuy!");
     }
+
+    // Cek apakah device punya sensor yang aktif (Fingerprint/FaceID)
+    const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    if (!available) {
+        return alert("Sensor gak ketemu atau belum di-set di HP lu!");
+    }
+
+    try {
+        // Ini bagian 'Sakti' yang manggil UI Sidik Jari bawaan HP (Android/iOS)
+        // Kita pake dummy challenge karena ini aplikasi lokal (client-side)
+        const challenge = new Uint8Array(32);
+        window.crypto.getRandomValues(challenge);
+
+        const auth = await navigator.credentials.get({
+            publicKey: {
+                challenge: challenge,
+                rpId: window.location.hostname,
+                userVerification: "required",
+                authenticatorSelection: {
+                    authenticatorAttachment: "platform",
+                }
+            }
+        });
+
+        if (auth) {
+            // Kalau sampe sini berarti sidik jari COCOK
+            document.getElementById('pinScreen').style.display = "none";
+            refresh();
+            console.log("Auth Success:", auth);
+        }
+    } catch (err) {
+        // Biasanya masuk sini kalau user klik 'Cancel' atau sidik jari gak dikenal
+        console.error(err);
+        alert("Gagal Verifikasi/Dibatalkan. Pake PIN aja dulu, boss!");
+    }
+}
 
     function toggleResetUI() {
         const mode = document.getElementById('rMode').value;
