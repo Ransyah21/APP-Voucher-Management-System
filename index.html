@@ -340,21 +340,23 @@
 
     // --- BIOMETRIC AUTH ---
     // --- BIOMETRIC AUTH REAL (WebAuthn) ---
+// --- BIOMETRIC LOGIC (OVO/SeaBank Style) ---
 async function tryBiometric() {
-    // 1. Cek apakah device & browser support
-    if (!window.PublicKeyCredential) {
-        return alert("HP/Browser lu gak support biometric API, cuy!");
+    if (!window.PublicKeyCredential) return alert("HP lu gak support, cuy!");
+
+    // Cek apakah sudah pernah daftar sidik jari di HP ini
+    const hasRegistered = localStorage.getItem('vms_fingerprint_id');
+
+    if (!hasRegistered) {
+        // TAHAP 1: REGISTRASI (Cuma sekali seumur hidup)
+        if (confirm("Sidik jari belum terdaftar. Daftarkan jari lu sekarang, boss?")) {
+            await registerBiometric();
+        }
+        return;
     }
 
-    // Cek apakah device punya sensor yang aktif (Fingerprint/FaceID)
-    const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-    if (!available) {
-        return alert("Sensor gak ketemu atau belum di-set di HP lu!");
-    }
-
+    // TAHAP 2: LOGIN (Kalau sudah pernah daftar)
     try {
-        // Ini bagian 'Sakti' yang manggil UI Sidik Jari bawaan HP (Android/iOS)
-        // Kita pake dummy challenge karena ini aplikasi lokal (client-side)
         const challenge = new Uint8Array(32);
         window.crypto.getRandomValues(challenge);
 
@@ -362,23 +364,51 @@ async function tryBiometric() {
             publicKey: {
                 challenge: challenge,
                 rpId: window.location.hostname,
-                userVerification: "required",
-                authenticatorSelection: {
-                    authenticatorAttachment: "platform",
-                }
+                userVerification: "required"
             }
         });
 
         if (auth) {
-            // Kalau sampe sini berarti sidik jari COCOK
             document.getElementById('pinScreen').style.display = "none";
             refresh();
-            console.log("Auth Success:", auth);
+            console.log("Login Berhasil!");
         }
     } catch (err) {
-        // Biasanya masuk sini kalau user klik 'Cancel' atau sidik jari gak dikenal
         console.error(err);
-        alert("Gagal Verifikasi/Dibatalkan. Pake PIN aja dulu, boss!");
+        alert("Gagal Login. Jari lu bersih gak? Atau pake PIN aja!");
+    }
+}
+
+// Fungsi buat daftarin sidik jari pertama kali
+async function registerBiometric() {
+    try {
+        const challenge = new Uint8Array(32);
+        window.crypto.getRandomValues(challenge);
+        const userID = new Uint8Array(16);
+        window.crypto.getRandomValues(userID);
+
+        const credential = await navigator.credentials.create({
+            publicKey: {
+                challenge: challenge,
+                rp: { name: "VMS Pro Master", id: window.location.hostname },
+                user: {
+                    id: userID,
+                    name: "Admin VMS",
+                    displayName: "Boss Besar"
+                },
+                pubKeyCredParams: [{ alg: -7, type: "public-key" }], // ES256
+                authenticatorSelection: { authenticatorAttachment: "platform" },
+                timeout: 60000
+            }
+        });
+
+        if (credential) {
+            localStorage.setItem('vms_fingerprint_id', credential.id);
+            alert("MANTAP! Sidik jari berhasil didaftarin. Sekarang coba klik lagi buat LOGIN.");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Gagal daftar sidik jari. Pastikan HP lu ada kunci layar (Pattern/PIN)!");
     }
 }
 
