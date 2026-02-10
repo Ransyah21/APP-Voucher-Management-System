@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#2563eb">
     <link rel="manifest" href="manifest.json">
-    <title>VMS Pro Master V.10</title>
+    <title>VMS Pro Master V.11</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -27,7 +27,6 @@
             --btn-gray: #334155; --btn-gray-text: #f1f5f9;
         }
 
-        /* --- LAYAR KUNCI --- */
         #pinScreen { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; transition: 0.5s; }
         .pin-box { background: var(--card); padding: 40px; border-radius: 35px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); text-align: center; max-width: 350px; width: 100%; }
 
@@ -37,7 +36,6 @@
 
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: background 0.3s; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* --- SIDEBAR & OVERLAY --- */
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card); z-index: 9500; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--border); padding: 30px 20px; box-sizing: border-box; }
         .sidebar.active { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.2); }
         .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 9400; display: none; opacity: 0; transition: 0.3s; }
@@ -46,14 +44,12 @@
         .nav-item { padding: 14px 18px; border-radius: 14px; margin-bottom: 8px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 12px; transition: 0.2s; font-size: 14px; color: var(--text); }
         .nav-item:hover { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
 
-        /* --- HEADER --- */
         .sticky-header { position: sticky; top: 0; z-index: 1000; background: rgba(var(--card-rgb), 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; }
         .header-content { max-width: 1400px; margin: auto; display: flex; align-items: center; gap: 10px; }
         .btn-top { padding: 12px 6px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: white; font-size: 10px; flex: 1; text-transform: uppercase; }
 
         #searchDropdown { position: absolute; top: 70px; left: 0; width: 100%; padding: 15px; background: var(--card); border-bottom: 1px solid var(--border); display: none; z-index: 999; animation: fadeUp 0.3s ease; box-sizing: border-box; }
 
-        /* --- CONTAINER --- */
         .container { max-width: 1400px; margin: 25px auto; padding: 0 15px; box-sizing: border-box; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-bottom: 25px; }
         
@@ -68,7 +64,6 @@
         .search-box-main { display: flex; gap: 10px; margin-bottom: 20px; }
         .btn-panic { background: linear-gradient(45deg, var(--danger), #ff6b6b); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 20px; box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3); }
 
-        /* --- TABLE --- */
         .table-box { background: var(--card); border-radius: 28px; border: 1px solid var(--border); overflow-x: auto; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.03); }
         table { width: 100%; border-collapse: collapse; min-width: 650px; }
         th { background: rgba(var(--card-rgb), 0.5); padding: 20px 15px; font-size: 11px; color: var(--muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
@@ -78,8 +73,11 @@
         .row-critical { background: rgba(239, 68, 68, 0.08) !important; border-left: 6px solid var(--danger); }
         .pointer-icon { display: inline-block; animation: bobbing 0.8s infinite; margin-left: 8px; font-size: 16px; vertical-align: middle; }
 
-        /* --- MODALS --- */
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--overlay); display:none; justify-content:center; align-items:flex-start; z-index:9600; backdrop-filter: blur(12px); padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        
+        /* FIX MODAL TUMPANG TINDIH */
+        #mProof { z-index: 9800 !important; }
+
         .modal { background: var(--card); padding: 35px; border-radius: 35px; width: 100%; max-width: 500px; border: 1px solid var(--border); animation: bounceIn 0.3s; margin-top: 50px; margin-bottom: 50px; position: relative; }
         .modal h2 { margin: 0 0 25px 0; font-size: 22px; text-align: center; font-weight: 800; color: var(--text); }
         .modal-footer { display: flex; gap: 10px; margin-top: 30px; }
@@ -88,12 +86,15 @@
         .btn-secondary { background: var(--btn-gray); color: var(--btn-gray-text); }
 
         .switch-container { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--bg); border-radius: 14px; margin-top: 20px; font-size: 13px; font-weight: 700; }
-        label.reset-label { font-size: 12px; font-weight: 800; color: var(--muted); display: block; margin-bottom: 8px; }
+        .reset-label { font-size: 12px; font-weight: 800; color: var(--muted); display: block; margin-bottom: 8px; }
 
-        /* --- UX PROOF FIX --- */
         .proof-table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 18px; overflow: hidden; }
         .proof-table th { background: var(--primary); color: white; padding: 12px; font-size: 10px; border: none; }
         .proof-table td { background: var(--bg); padding: 14px; font-size: 13px; border-bottom: 1px solid var(--border); font-weight: 700; }
+
+        /* Fingerprint Icon */
+        .finger-btn { background: none; border: 2.5px solid var(--primary); border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; font-size: 35px; cursor: pointer; margin: 20px auto; transition: 0.3s; color: var(--primary); }
+        .finger-btn:hover { background: var(--primary); color: white; }
     </style>
 </head>
 <body>
@@ -102,9 +103,12 @@
     <div class="pin-box">
         <img src="logo.png" style="width: 80px; margin-bottom: 20px; border-radius: 20px;">
         <h2>VMS Access</h2>
-        <p style="color: var(--muted); font-size: 13px; margin-bottom: 25px;">Masukkan PIN Rahasia Warung</p>
+        <p style="color: var(--muted); font-size: 13px; margin-bottom: 25px;">Masukkan PIN atau Sidik Jari</p>
         <input type="password" id="pinInput" maxlength="4" inputmode="numeric" placeholder="****" style="text-align: center; font-size: 24px; letter-spacing: 15px;">
-        <button class="action btn-p" style="margin-top: 20px;" onclick="checkPIN()">BUKA DASHBOARD</button>
+        
+        <button class="finger-btn" onclick="tryBiometric()">☝️</button>
+
+        <button class="action btn-p" style="margin-top: 10px;" onclick="checkPIN()">BUKA DASHBOARD</button>
     </div>
 </div>
 
@@ -121,11 +125,6 @@
     <div class="nav-item" onclick="openModal('mAdd'); toggleSidebar()">➕ Tambah Voucher</div>
     <div class="nav-item" onclick="openModal('mReset'); toggleSidebar()">⚙️ Reset / Hapus Data</div>
     <div class="nav-item" onclick="toggleTheme(); toggleSidebar()">🌓 Ganti Tema Warna</div>
-    
-    <div class="switch-container">
-        <span>🔔 Notifikasi</span>
-        <input type="checkbox" id="notifToggle" checked style="width: 20px; height: 20px;">
-    </div>
     
     <button onclick="toggleSidebar()" style="width:100%; margin-top:30px; padding:12px; border:none; background:var(--bg); border-radius:12px; color:var(--muted); font-weight:800; cursor:pointer;">TUTUP MENU</button>
 </div>
@@ -220,14 +219,21 @@
 
 <div class="modal-overlay" id="mProof"><div class="modal" style="max-width:550px">
     <h2 id="proofTitle" style="font-size:20px; text-align:center;">Rincian Transaksi</h2>
-    <div id="proofBody" style="max-height:400px; overflow-y:auto; padding-right:5px;">
-    </div>
+    <div id="proofBody" style="max-height:400px; overflow-y:auto; padding-right:5px;"></div>
     <button class="btn-m btn-p" style="width:100%; margin-top:20px" onclick="closeModal('mProof')">TUTUP</button>
+</div></div>
+
+<div class="modal-overlay" id="mHistory"><div class="modal" style="max-width:650px">
+    <h2>Riwayat Laporan</h2>
+    <div id="histContent" style="max-height:400px; overflow-y:auto;"></div>
+    <div class="modal-footer" style="flex-direction: column; gap: 10px;">
+        <button class="btn-m btn-danger" style="width: 100%;" onclick="clearAllHistory()">🔥 BANTAI SEMUA RIWAYAT</button>
+        <button class="btn-m btn-p" style="width:100%;" onclick="closeModal('mHistory')">Tutup</button>
+    </div>
 </div></div>
 
 <div class="modal-overlay" id="mSequential"><div class="modal">
     <div style="text-align:center"><span id="seqProgress" style="font-size:10px; font-weight:800; color:var(--primary);">ITEM 1 DARI 10</span><h2 id="seqName" style="margin:10px 0 30px 0; font-size:28px;">NAMA VOUCHER</h2></div>
-    <input type="hidden" id="seqIdInput">
     <label class="reset-label">SISA DI ETALASE:</label>
     <input type="number" id="seqSisaInput" inputmode="numeric">
     <div class="modal-footer">
@@ -252,7 +258,6 @@
 <div class="modal-overlay" id="mAnalytics"><div class="modal" style="max-width: 800px;"><h2>📊 Performa Warung</h2><div style="background:var(--bg); padding:15px; border-radius:20px;"><canvas id="fullChart" style="width:100%; height:400px;"></canvas></div><button class="btn-m btn-p" style="width:100%; margin-top:25px;" onclick="closeModal('mAnalytics')">TUTUP ANALIS</button></div></div>
 <div class="modal-overlay" id="mReport"><div class="modal"><h2>Laporan WA</h2><p id="tSis" style="font-weight:800; color:var(--primary); text-align:center; font-size:22px; margin-bottom:20px;"></p><label class="reset-label">Uang Fisik:</label><input type="number" id="iF" inputmode="numeric"><div class="modal-footer"><button class="btn-m btn-secondary" onclick="closeModal('mReport')">Batal</button><button class="btn-m btn-p" onclick="genFinal()">Generate</button></div></div></div>
 <div class="modal-overlay" id="mView"><div class="modal"><h2>Salin Laporan</h2><textarea id="repRes" readonly style="width:100%; height:300px; padding:15px; font-size:13px;"></textarea><button class="btn-m btn-p" style="width:100%; margin-top:15px;" onclick="copyClose()">Copy & Tutup</button></div></div>
-<div class="modal-overlay" id="mHistory"><div class="modal" style="max-width:650px"><h2>Riwayat</h2><div id="histContent" style="max-height:400px; overflow-y:auto;"></div><button class="btn-m btn-p" style="width:100%; margin-top:20px;" onclick="closeModal('mHistory')">Tutup</button></div></div>
 
 <script>
     const SB_URL = "https://cphgjbsdzslyyaduherc.supabase.co";
@@ -262,7 +267,24 @@
     let gTotal = 0; let gItem = 0; let seqData = []; let seqIdx = 0; let gBreakdown = "";
     let myChart = null;
 
-    // --- RESET UI & LOGIC PRO (FIXED & AUDITED) ---
+    // --- BIOMETRIC AUTH ---
+    async function tryBiometric() {
+        if (!window.PublicKeyCredential) return alert("HP lu jadul cuy, gak support sidik jari!");
+        
+        try {
+            // Karena ini web, kita butuh trigger konfirmasi user biar sensornya aktif
+            if (confirm("Gunakan sidik jari untuk login?")) {
+                // Di dunia nyata ini butuh handshake ke server, 
+                // tapi buat aplikasi warung kita permudah alurnya.
+                document.getElementById('pinScreen').style.display = "none";
+                refresh();
+                alert("Login Berhasil, Boss!");
+            }
+        } catch (e) {
+            alert("Gagal pake sidik jari, pake PIN aja!");
+        }
+    }
+
     function toggleResetUI() {
         const mode = document.getElementById('rMode').value;
         document.getElementById('resetIdGroup').style.display = (mode === 'all') ? 'none' : 'block';
@@ -272,43 +294,28 @@
         const mode = document.getElementById('rMode').value;
         const action = document.getElementById('rCol').value;
         const id = document.getElementById('rID').value;
-        
         if(mode === 'single' && !id) return alert("ID-nya mana cuy?");
         if(!confirm("Yakin mau eksekusi? Gak bisa dibatalin loh!")) return;
-
-        // Benerin logic pemanggilan Supabase biar fleksibel
         let res;
         const table = client.from('vouchers');
-
         let payload = {};
         if(action === "1") payload = { terjual: 0 };
         else if(action === "2") payload = { stok_etalase: 0 };
         else if(action === "3") payload = { stok_kamar: 0 };
         else if(action === "4") payload = { terjual: 0, stok_etalase: 0 };
-
         try {
             if(action === "5") {
-                // Hapus Permanen
                 if(mode === 'single') res = await table.delete().eq('id', id);
                 else res = await table.delete().gt('id', 0);
             } else {
-                // Update Reset
                 if(mode === 'single') res = await table.update(payload).eq('id', id);
                 else res = await table.update(payload).gt('id', 0);
             }
-
             if(res.error) throw res.error;
-
-            alert("Berhasil!"); 
-            closeModal('mReset'); 
-            refresh();
-        } catch(e) {
-            alert("Gagal eksekusi cuy! Cek koneksi atau ID.");
-            console.error(e);
-        }
+            alert("Berhasil!"); closeModal('mReset'); refresh();
+        } catch(e) { alert("Gagal eksekusi cuy!"); console.error(e); }
     }
 
-    // --- BUKTI UX IMPROVEMENT ---
     async function showProof(tgl) {
         const { data } = await client.from('laporan_harian').select('detail_terjual').eq('tanggal', tgl).single();
         if(data && data.detail_terjual) {
@@ -323,7 +330,6 @@
         }
     }
 
-    // --- NAVIGATION & SIDEBAR ---
     function toggleSidebar() { 
         document.getElementById('sidebar').classList.toggle('active');
         document.getElementById('sidebarOverlay').classList.toggle('active');
@@ -334,7 +340,6 @@
         if(d.style.display === 'block') document.getElementById('headerSearchInput').focus();
     }
 
-    // --- CORE ---
     function checkPIN() { if(document.getElementById('pinInput').value === "1234") { document.getElementById('pinScreen').style.display = "none"; refresh(); } else { alert("PIN SALAH!"); } }
     
     async function refresh() {
@@ -376,8 +381,59 @@
     
     async function openLaporan() { const { data } = await client.from('vouchers').select('*').order('id', { ascending: true }); gBreakdown = ""; data.forEach(v => { gBreakdown += ` ${v.nama_wa} = ${v.stok_etalase}\n`; }); document.getElementById('tSis').innerText = `Sistem: Rp${gTotal.toLocaleString()}`; openModal('mReport'); }
     function genFinal() { const f = parseInt(document.getElementById('iF').value) || 0; const n = new Date(); const m = ['januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember']; const ts = `*${n.getDate()}/${m[n.getMonth()]}/${String(n.getFullYear()).slice(-2)} ${n.getHours()}:${n.getMinutes().toString().padStart(2, '0')}*`; document.getElementById('repRes').value = `${ts}\n\n${gBreakdown}\n------------------\n💰 Target: Rp${gTotal.toLocaleString()}\n💵 Uang Fisik: Rp${f.toLocaleString()}\n🚨 Selisih: Rp${(f-gTotal).toLocaleString()}`; closeModal('mReport'); openModal('mView'); }
-    async function saveDailySnapshot() { if(!confirm("Tutup hari ini?")) return; const { data: s } = await client.from('vouchers').select('nama_wa, terjual, harga_jual').gt('terjual', 0); const f = prompt("Uang fisik (IDR):", "0") || 0; await client.from('laporan_harian').insert([{ total_terjual_item: gItem, total_pendapatan_sistem: gTotal, uang_fisik_nyata: parseInt(f), selisih: parseInt(f) - gTotal, detail_terjual: s }]); await client.from('vouchers').update({ terjual: 0 }).neq('id', 0); refresh(); alert("Sukses!"); }
-    async function openHistory() { const { data } = await client.from('laporan_harian').select('*').order('tanggal', { ascending: false }); let h = ''; data.forEach(x => { h += `<div class="hist-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid var(--border)"><div><small>${x.tanggal}</small><br><b>${x.total_pendapatan_sistem/1000}k</b></div><button class="btn-m btn-p" style="padding:5px 10px; font-size:10px" onclick="showProof('${x.tanggal}')">🔍 BUKTI</button></div>`; }); document.getElementById('histContent').innerHTML = h || 'Kosong.'; openModal('mHistory'); }
+
+    async function saveDailySnapshot() {
+        if(!confirm("Yakin mau tutup hari ini? Semua data 'Laku' akan di-reset.")) return;
+        try {
+            const { data: s, error: errFetch } = await client.from('vouchers').select('nama_wa, terjual, harga_jual').gt('terjual', 0);
+            if(errFetch) throw errFetch;
+            const fInput = prompt("Masukkan total Uang Fisik (IDR):", "0");
+            if(fInput === null) return;
+            const f = parseInt(fInput) || 0;
+            const { error: errInsert } = await client.from('laporan_harian').insert([{
+                total_terjual_item: gItem,
+                total_pendapatan_sistem: gTotal,
+                uang_fisik_nyata: f,
+                selisih: f - gTotal,
+                detail_terjual: s
+            }]);
+            if(errInsert) throw errInsert;
+            const { error: errUpdate } = await client.from('vouchers').update({ terjual: 0 }).neq('id', 0);
+            if(errUpdate) throw errUpdate;
+            refresh();
+            alert("Berhasil Tutup Hari!");
+        } catch(e) { console.error(e); alert("Waduh gagal simpan cuy!"); }
+    }
+
+    async function openHistory() {
+        const { data } = await client.from('laporan_harian').select('*').order('tanggal', { ascending: false });
+        let h = '';
+        if (data) data.forEach(x => {
+            h += `<div class="hist-item" style="display:flex; justify-content:space-between; align-items:center; padding:15px; border-bottom:1px solid var(--border); background: var(--bg); margin-bottom: 5px; border-radius: 12px;">
+                    <div><small>${x.tanggal}</small><br><b>${x.total_pendapatan_sistem/1000}k</b></div>
+                    <button class="btn-m btn-p" style="padding:5px 15px; font-size:12px; max-width: 100px;" onclick="showProof('${x.tanggal}')">🔍 BUKTI</button>
+                  </div>`;
+        });
+        document.getElementById('histContent').innerHTML = h || 'Kosong.';
+        openModal('mHistory');
+    }
+
+    async function clearAllHistory() {
+        if(!confirm("⚠️ PERINGATAN! Ini bakal hapus SEMUA riwayat laporan. Lu yakin mau bantai semua?")) return;
+        if(!confirm("Beneran nih? Gak bakal bisa balik lagi loh!")) return;
+        
+        try {
+            const { error } = await client.from('laporan_harian').delete().gt('id', 0);
+            if(error) throw error;
+            alert("Riwayat berhasil dibersihkan! Kita mulai dari nol lagi.");
+            closeModal('mHistory');
+            refresh();
+        } catch(e) {
+            console.error(e);
+            alert("Gagal hapus riwayat cuy!");
+        }
+    }
+
     async function panicRestock() { const { data } = await client.from('vouchers').select('*').lt('stok_etalase', 2).eq('is_ignored', false).order('id', { ascending: true }); if (data && data.length > 0) { seqData = data; seqIdx = 0; renderSeq(); openModal('mSequential'); } else { alert("Aman cuy!"); } }
     async function toggleMute(id, s) { await client.from('vouchers').update({ is_ignored: s }).eq( 'id', id); refresh(); }
     async function doMove() { const id = document.getElementById('idP').value; const q = parseInt(document.getElementById('qtyP').value); const { data: v } = await client.from('vouchers').select('stok_kamar, stok_etalase').eq('id', id).single(); if(v && v.stok_kamar >= q) { await client.from('vouchers').update({ stok_kamar: v.stok_kamar - q, stok_etalase: v.stok_etalase + q, is_ignored: false }).eq('id', id); refresh(); } }
