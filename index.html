@@ -155,7 +155,11 @@
     letter-spacing: 1.5px;
     color: var(--muted);
     text-transform: uppercase;
-}    </style>
+}    
+
+
+
+</style>
 </head>
 <body>
 
@@ -190,13 +194,14 @@
         <img src="logo.png" style="width: 80px; height: 80px; border-radius: 20px; margin-bottom: 10px; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
         <h2 style="margin:0; font-size:22px; font-weight:800; color:var(--primary);">VMS MASTER</h2>
     </div>
+    
     <div class="nav-item" onclick="toggleSidebar()">🏠 Dashboard</div>
     <div class="nav-item" onclick="openHistory(); toggleSidebar()">📜 Riwayat & Bukti</div>
     <div class="nav-item" onclick="openModal('mAnalytics'); loadChart(); toggleSidebar()">📈 Grafik Analis</div>
     <div class="nav-item" onclick="openModal('mAdd'); toggleSidebar()">➕ Tambah Voucher</div>
     <div class="nav-item" onclick="openModal('mReset'); toggleSidebar()">⚙️ Reset / Hapus Data</div>
-    <div class="nav-item" onclick="toggleTheme(); toggleSidebar()">🌓 Ganti Tema Warna</div>
-    
+    <div class="nav-item" onclick="window.open('https://docs.google.com/spreadsheets/d/1B5tbG7DmaWxYpnYkLcmuNA0cUGZj9sE0q1Qy4xgWNFY/edit', '_blank')">📑 Buka Laporan Print</div>
+
     <button onclick="toggleSidebar()" style="width:100%; margin-top:30px; padding:12px; border:none; background:var(--bg); border-radius:12px; color:var(--muted); font-weight:800; cursor:pointer;">TUTUP MENU</button>
 </div>
 
@@ -236,31 +241,54 @@
         </div>
     </div>
 
-    <div class="grid">
-        <div class="card">
-            <h3>🚚 Pindahkan Stok</h3>
-            <div style="display:flex; gap:10px; margin-bottom:5px;">
-                <div style="flex:0.5"><label style="font-size:10px; font-weight:800;">ID</label><input type="number" id="idP" inputmode="numeric"></div>
-                <div style="flex:1"><label style="font-size:10px; font-weight:800;">QTY</label><input type="number" id="qtyP" inputmode="numeric"></div>
+<div class="grid">
+    <div class="card">
+        <h3>🚚 Pindahkan Stock Ke Etalase</h3>
+        <div style="display:flex; gap:10px; margin-bottom:5px;">
+            <div style="flex:1.5">
+                <label style="font-size:10px; font-weight:800;">PILIH VOUCHER</label>
+                <select id="selP" style="margin-bottom: 15px;">
+                    <option value="">-- Pilih Voucher --</option>
+                </select>
             </div>
-            <button class="action btn-i" onclick="doMove()">Pindahkan ke Etalase</button>
-        </div>
-        <div class="card">
-            <h3>📦 Restock Kamar</h3>
-            <div style="display:flex; gap:10px; margin-bottom:5px;">
-                <div style="flex:0.5"><label style="font-size:10px; font-weight:800;">ID</label><input type="number" id="idR" inputmode="numeric"></div>
-                <div style="flex:1"><label style="font-size:10px; font-weight:800;">QTY</label><input type="number" id="qtyR" inputmode="numeric"></div>
+            <div style="flex:1">
+                <label style="font-size:10px; font-weight:800;">QTY</label>
+                <input type="number" id="qtyP" inputmode="numeric" placeholder="0">
             </div>
-            <button class="action btn-s" onclick="doRestock()">Simpan ke Kamar</button>
         </div>
+        <button class="action btn-i" onclick="doMove()">Pindahkan ke Etalase</button>
     </div>
 
-    <div class="table-box">
-        <table>
-            <thead><tr><th>ID</th><th class="td-left">Voucher (Produk)</th><th>Kmr</th><th>Etl</th><th>Laku</th><th>Aksi</th></tr></thead>
-            <tbody id="vTableBody"></tbody>
-        </table>
+    <div class="card">
+        <h3>📦 Restock Kamar</h3>
+        <div style="display:flex; gap:10px; margin-bottom:5px;">
+            <div style="flex:1.5">
+                <label style="font-size:10px; font-weight:800;">PILIH VOUCHER</label>
+                <select id="selR" style="margin-bottom: 15px;">
+                    <option value="">-- Pilih Voucher --</option>
+                </select>
+            </div>
+            <div style="flex:1">
+                <label style="font-size:10px; font-weight:800;">QTY</label>
+                <input type="number" id="qtyR" inputmode="numeric" placeholder="0">
+            </div>
+        </div>
+        <button class="action btn-s" onclick="doRestock()">Simpan ke Kamar</button>
     </div>
+</div>
+
+<div class="table-box">
+    <table>
+        <thead>
+            <tr>
+                <th class="td-left">Voucher (Produk)</th>
+                <th>Kmr</th>
+                <th>Etl</th>
+                <th>Laku</th>
+            </tr>
+        </thead>
+        <tbody id="vTableBody"></tbody>
+    </table>
 </div>
 
 <div class="modal-overlay" id="mReset"><div class="modal">
@@ -329,6 +357,9 @@
 <div class="modal-overlay" id="mAnalytics"><div class="modal" style="max-width: 800px;"><h2>📊 Performa Warung</h2><div style="background:var(--bg); padding:15px; border-radius:20px;"><canvas id="fullChart" style="width:100%; height:400px;"></canvas></div><button class="btn-m btn-p" style="width:100%; margin-top:25px;" onclick="closeModal('mAnalytics')">TUTUP ANALIS</button></div></div>
 <div class="modal-overlay" id="mReport"><div class="modal"><h2>Laporan WA</h2><p id="tSis" style="font-weight:800; color:var(--primary); text-align:center; font-size:22px; margin-bottom:20px;"></p><label class="reset-label">Uang Fisik:</label><input type="number" id="iF" inputmode="numeric"><div class="modal-footer"><button class="btn-m btn-secondary" onclick="closeModal('mReport')">Batal</button><button class="btn-m btn-p" onclick="genFinal()">Generate</button></div></div></div>
 <div class="modal-overlay" id="mView"><div class="modal"><h2>Salin Laporan</h2><textarea id="repRes" readonly style="width:100%; height:300px; padding:15px; font-size:13px;"></textarea><button class="btn-m btn-p" style="width:100%; margin-top:15px;" onclick="copyClose()">Copy & Tutup</button></div></div>
+
+
+
 
 <script>
     const SB_URL = "https://cphgjbsdzslyyaduherc.supabase.co";
@@ -481,20 +512,47 @@ async function registerBiometric() {
 
     function checkPIN() { if(document.getElementById('pinInput').value === "1234") { document.getElementById('pinScreen').style.display = "none"; refresh(); } else { alert("PIN SALAH!"); } }
     
-    async function refresh() {
-        const { data } = await client.from('vouchers').select('*').order('id', { ascending: true });
-        const b = document.getElementById('vTableBody'); b.innerHTML = '';
-        gTotal = 0; gItem = 0;
-        if (data) data.forEach((v) => {
-            const isCrit = v.stok_etalase < 2 && !v.is_ignored;
+async function refresh() {
+    const { data } = await client.from('vouchers').select('*').order('id', { ascending: true });
+    const b = document.getElementById('vTableBody'); 
+    b.innerHTML = '';
+    
+    // Siapkan dropdown (tetap ada buat input stok)
+    const selP = document.getElementById('selP');
+    const selR = document.getElementById('selR');
+    selP.innerHTML = '<option value="">-- Pilih Voucher --</option>';
+    selR.innerHTML = '<option value="">-- Pilih Voucher --</option>';
+
+    gTotal = 0; gItem = 0;
+    
+    if (data) {
+        data.forEach((v) => {
+            // Logika Baris Merah: Muncul kalau stok ETALASE 0
+            const isCrit = v.stok_etalase <= 0 && !v.is_ignored;
             const row = document.createElement('tr');
             if (isCrit) row.classList.add('row-critical');
+
             const stockUI = isCrit ? `${v.stok_etalase} <span class="pointer-icon">👈</span>` : v.stok_etalase;
-            row.innerHTML = `<td style="font-size:11px; color:var(--muted);">#${v.id}</td><td class="td-left">${v.nama_lengkap}</td><td>${v.stok_kamar}</td><td>${stockUI}</td><td><span style="color:var(--danger);">${v.terjual}</span></td><td><button style="border:none; background:var(--border); border-radius:8px; padding:6px; font-size:10px; font-weight:800; color:var(--muted); cursor:pointer;" onclick="toggleMute(${v.id}, ${!v.is_ignored})">${v.is_ignored ? 'ON' : 'OFF'}</button></td>`;
+
+            // Render Tabel TANPA kolom ID dan AKSI
+            row.innerHTML = `
+                <td class="td-left">${v.nama_lengkap}</td>
+                <td>${v.stok_kamar}</td>
+                <td>${stockUI}</td>
+                <td><span style="color:var(--danger);">${v.terjual}</span></td>
+            `;
             b.appendChild(row);
-            gTotal += (v.terjual * v.harga_jual); gItem += v.terjual;
+            
+            // Isi Dropdown buat input stok (biar gak ribet ngetik ID)
+            const opt = `<option value="${v.id}">${v.nama_wa}</option>`;
+            selP.innerHTML += opt;
+            selR.innerHTML += opt;
+
+            gTotal += (v.terjual * v.harga_jual); 
+            gItem += v.terjual;
         });
     }
+}
 
     function filterData(inputId) {
         const query = document.getElementById(inputId).value.toLowerCase();
@@ -572,6 +630,68 @@ async function registerBiometric() {
             alert("Gagal hapus riwayat cuy!");
         }
     }
+
+    async function doMove() {
+    const id = document.getElementById('selP').value; // Ngambil ID dari dropdown
+    const q = parseInt(document.getElementById('qtyP').value);
+    
+    if(!id) return alert("Pilih vouchernya dulu bosqu!");
+    if(!q || q <= 0) return alert("Jumlahnya diisi dong!");
+
+    const { data: v } = await client.from('vouchers').select('stok_kamar, stok_etalase').eq('id', id).single();
+    
+    if(v && v.stok_kamar >= q) {
+        await client.from('vouchers').update({ 
+            stok_kamar: v.stok_kamar - q, 
+            stok_etalase: v.stok_etalase + q, 
+            is_ignored: false 
+        }).eq('id', id);
+        
+        // Reset input setelah sukses
+        document.getElementById('qtyP').value = '';
+        document.getElementById('selP').value = '';
+        refresh();
+    } else {
+        alert("Stok di Kamar gak cukup cuy!");
+    }
+}
+
+async function doRestock() {
+    const id = document.getElementById('selR').value; // Ngambil ID dari dropdown
+    const q = parseInt(document.getElementById('qtyR').value);
+    
+    if(!id) return alert("Pilih vouchernya dulu bosqu!");
+    if(!q || q <= 0) return alert("Jumlahnya diisi dong!");
+
+    const { data: v } = await client.from('vouchers').select('stok_kamar').eq('id', id).single();
+    
+    if(v) {
+        await client.from('vouchers').update({ 
+            stok_kamar: v.stok_kamar + q, 
+            is_ignored: false 
+        }).eq('id', id);
+        
+        // Reset input setelah sukses
+        document.getElementById('qtyR').value = '';
+        document.getElementById('selR').value = '';
+        refresh();
+    }
+}
+
+async function panicRestock() { 
+    // lte(0) = stok 0 atau kurang
+    const { data } = await client.from('vouchers').select('*').lte('stok_etalase', 0).eq('is_ignored', false).order('id', { ascending: true }); 
+    
+    if (data && data.length > 0) { 
+        seqData = data; 
+        seqIdx = 0; 
+        renderSeq(); 
+        openModal('mSequential'); 
+    } else { 
+        alert("Stok masih aman semua, belum ada yang nol cuy!"); 
+    } 
+}
+
 
     async function panicRestock() { const { data } = await client.from('vouchers').select('*').lt('stok_etalase', 2).eq('is_ignored', false).order('id', { ascending: true }); if (data && data.length > 0) { seqData = data; seqIdx = 0; renderSeq(); openModal('mSequential'); } else { alert("Aman cuy!"); } }
     async function toggleMute(id, s) { await client.from('vouchers').update({ is_ignored: s }).eq( 'id', id); refresh(); }
